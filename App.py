@@ -563,21 +563,3 @@ if st.session_state.page == 8:
     st.dataframe(df.tail(1))
 
     st.write(tq("done_message"))
-
-# Extra
-import gspread
-from google.oauth2.service_account import Credentials
-
-scope = ["https://www.googleapis.com/auth/spreadsheets",
-         "https://www.googleapis.com/auth/drive"]
-
-creds = Credentials.from_service_account_info(st.secrets["gcp_service_account"], scopes=scope)
-gc = gspread.authorize(creds)
-
-SHEET_ID = "1AbCdeFGhIJKlmnOPQrStuvWXyz12345678"  # only ID
-
-try:
-    sh = gc.open_by_key(SHEET_ID)
-    st.success("Google Sheet opened successfully!")
-except Exception as e:
-    st.error(f"Error: {e}")
