@@ -568,48 +568,16 @@ if st.session_state.page == 8:
 import gspread
 from google.oauth2.service_account import Credentials
 
-# ---------------- SAVE TO GOOGLE SHEET ---------------------
-# Prepare data
-save_data = {
-    "timestamp": datetime.now().isoformat(),
-    "language": st.session_state.locked_lang
-}
-
-# Add responses
-for k,v in st.session_state.responses.items():
-    save_data[k] = v
-
-# Add computed scores
-for k,v in scores.items():
-    save_data[k] = v
-
-# Authenticate with Google Sheets
 scope = ["https://www.googleapis.com/auth/spreadsheets",
          "https://www.googleapis.com/auth/drive"]
 
-creds = Credentials.from_service_account_info(
-    st.secrets["gcp_service_account"],
-    scopes=scope
-)
-
+creds = Credentials.from_service_account_info(st.secrets["gcp_service_account"], scopes=scope)
 gc = gspread.authorize(creds)
 
-# Open your sheet (replace with your actual Spreadsheet ID)
-SHEET_ID = "19uQkgtJC3dpFUCynLhSzpHhqbYRpXQCruzOS8tloCfI"
-sheet = gc.open_by_key(SHEET_ID).sheet1
+SHEET_ID = "1AbCdeFGhIJKlmnOPQrStuvWXyz12345678"  # only ID
 
-# Append new row
-row_values = [save_data.get(col, "") for col in sheet.row_values(1)]
-# If new keys exist (like computed scores not in headers), append them to header first
-for key in save_data.keys():
-    if key not in row_values:
-        sheet.update_cell(1, len(row_values)+1, key)
-        row_values.append(key)
-
-# Prepare row in the order of header
-row_to_append = [save_data.get(col, "") for col in row_values]
-sheet.append_row(row_to_append)
-
-st.success(tq("final_saved"))
-st.write("### 🔽 Your Final Record")
-st.dataframe(pd.DataFrame([save_data]))
+try:
+    sh = gc.open_by_key(SHEET_ID)
+    st.success("Google Sheet opened successfully!")
+except Exception as e:
+    st.error(f"Error: {e}")
