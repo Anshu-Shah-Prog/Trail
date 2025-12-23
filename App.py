@@ -168,6 +168,32 @@ else:
         st.markdown("---")
         st.write("Use the Next/Back buttons at the bottom of each page to navigate through the questionnaire.")
         # Next parts (Section rendering) are in Part 3 — they will pick up st.session_state.locked_lang
+def mcq_buttons(qkey, question, options):
+"""
+Button-based MCQ with NO default selection.
+Stores selected value in st.session_state.responses[qkey]
+"""
+# Initialize response if not present
+    if qkey not in st.session_state.responses:
+        st.session_state.responses[qkey] = None
+
+    st.write(question)
+
+    cols = st.columns(len(options))
+    for i, opt in enumerate(options):
+        is_selected = st.session_state.responses[qkey] == opt
+
+        # Visual feedback using button label
+        label = f"✅ {opt}" if is_selected else opt
+
+        if cols[i].button(label, key=f"{qkey}_{i}"):
+            st.session_state.responses[qkey] = opt
+            st.rerun()
+
+    # Small spacing
+    st.write("")
+
+
 
 # ---------------------------------------------------------
 # PART 3 — SECTION A to SECTION F (Multilingual Pages)
@@ -240,8 +266,7 @@ if st.session_state.page == 2:
     for q in required:
         qtext = t(lang, f"Q.{q}.q", f"[MISSING QUESTION {q}]")
         opts = t(lang, f"Q.{q}.opts", [])
-        choice = st.radio(qtext, opts, index=0 if opts else None, key=f"r_{q}")
-        answer(q, choice)
+        mcq_buttons(q, qtext, opts)
 
     # Navigation buttons
     col1, col2, col3 = st.columns([1,1,4])
@@ -269,8 +294,7 @@ if st.session_state.page == 3:
     for q in required:
         qtext = t(lang, f"Q.{q}.q", f"[MISSING QUESTION {q}]")
         opts = t(lang, f"Q.{q}.opts", [])
-        choice = st.radio(qtext, opts, index=0 if opts else None, key=f"r_{q}")
-        answer(q, choice)
+        mcq_buttons(q, qtext, opts)
 
     col1, col2, col3 = st.columns([1,1,4])
     with col1:
@@ -298,15 +322,13 @@ if st.session_state.page == 4:
     for q in ["C1","C2","C3","C4","C5"]:
         qtext = t(lang, f"Q.{q}.q", f"[MISSING QUESTION {q}]")
         opts = t(lang, f"Q.{q}.opts", [])
-        choice = st.radio(qtext, opts, index=0 if opts else None, key=f"r_{q}")
-        answer(q, choice)
+        mcq_buttons(q, qtext, opts)
 
     st.subheader(tq("sections.C.sub_dass"))
     for q in ["C6","C7","C8","C9","C10","C11","C12"]:
         qtext = t(lang, f"Q.{q}.q", f"[MISSING QUESTION {q}]")
         opts = t(lang, f"Q.{q}.opts", [])
-        choice = st.radio(qtext, opts, index=0 if opts else None, key=f"r_{q}")
-        answer(q, choice)
+        mcq_buttons(q, qtext, opts)
 
     col1, col2, col3 = st.columns([1,1,4])
     with col1:
@@ -332,8 +354,7 @@ if st.session_state.page == 5:
     for q in required:
         qtext = t(lang, f"Q.{q}.q", f"[MISSING QUESTION {q}]")
         opts = t(lang, f"Q.{q}.opts", [])
-        choice = st.radio(qtext, opts, index=0 if opts else None, key=f"r_{q}")
-        answer(q, choice)
+        mcq_buttons(q, qtext, opts)
 
     col1, col2, col3 = st.columns([1,1,4])
     with col1:
@@ -359,8 +380,7 @@ if st.session_state.page == 6:
     for q in required:
         qtext = t(lang, f"Q.{q}.q", f"[MISSING QUESTION {q}]")
         opts = t(lang, f"Q.{q}.opts", [])
-        choice = st.radio(qtext, opts, index=0 if opts else None, key=f"r_{q}")
-        answer(q, choice)
+        mcq_buttons(q, qtext, opts)
 
     col1, col2, col3 = st.columns([1,1,4])
     with col1:
@@ -386,8 +406,7 @@ if st.session_state.page == 7:
     for q in required:
         qtext = t(lang, f"Q.{q}.q", f"[MISSING QUESTION {q}]")
         opts = t(lang, f"Q.{q}.opts", [])
-        choice = st.radio(qtext, opts, index=0 if opts else None, key=f"r_{q}")
-        answer(q, choice)
+        mcq_buttons(q, qtext, opts)
 
     col1, col2, col3 = st.columns([1,1,4])
     with col1:
