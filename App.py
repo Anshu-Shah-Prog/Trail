@@ -169,11 +169,11 @@ else:
         st.write("Use the Next/Back buttons at the bottom of each page to navigate through the questionnaire.")
         # Next parts (Section rendering) are in Part 3 — they will pick up st.session_state.locked_lang
 def mcq_buttons(qkey, question, options):
-"""
-Button-based MCQ with NO default selection.
-Stores selected value in st.session_state.responses[qkey]
-"""
-# Initialize response if not present
+    """
+    Button-based MCQ with NO default selection.
+    Stores selected value in st.session_state.responses[qkey]
+    """
+    # Initialize response if not present
     if qkey not in st.session_state.responses:
         st.session_state.responses[qkey] = None
 
