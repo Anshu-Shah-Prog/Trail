@@ -595,7 +595,7 @@ creds = Credentials.from_service_account_info(
 gc = gspread.authorize(creds)
 
 # Open your sheet (replace with your actual Spreadsheet ID)
-SHEET_ID = "YOUR_SPREADSHEET_ID"
+SHEET_ID = "https://docs.google.com/spreadsheets/d/19uQkgtJC3dpFUCynLhSzpHhqbYRpXQCruzOS8tloCfI/edit"
 sheet = gc.open_by_key(SHEET_ID).sheet1
 
 # Append new row
