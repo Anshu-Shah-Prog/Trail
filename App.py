@@ -535,7 +535,7 @@ def append_to_google_sheet(data_dict):
         )
 
         client = gspread.authorize(creds)
-        sheet = client.open(Database).worksheet(Sheet1)
+        sheet = client.open('Database').worksheet('Sheet1')
 
         # Add headers if sheet is empty
         if not sheet.get_all_values():
