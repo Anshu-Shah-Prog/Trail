@@ -510,16 +510,55 @@ def compute_scores(res, lang=None):
 
 
 # ---------------------------------------------------------
-# FINAL PAGE  (Page 8)
+# FINAL PAGE  (Page 8) — SAVE DIRECTLY TO GOOGLE SHEETS
+# ---------------------------------------------------------
+
+import gspread
+from google.oauth2.service_account import Credentials
+
+# --- Google Sheets Setup ---
+GSHEET_FILE = "google_key.json"   # service account key file
+SHEET_NAME = "Database"             # Google Sheet name
+WORKSHEET_NAME = "Sheet1"         # Tab name inside the sheet
+
+
+def append_to_google_sheet(data_dict):
+    try:
+        scopes = [
+            "https://www.googleapis.com/auth/spreadsheets",
+            "https://www.googleapis.com/auth/drive"
+        ]
+
+        creds = Credentials.from_service_account_file(
+            GSHEET_FILE,
+            scopes=scopes
+        )
+        client = gspread.authorize(creds)
+
+        sheet = client.open(SHEET_NAME).worksheet(WORKSHEET_NAME)
+
+        # Add headers if sheet is empty
+        if not sheet.get_all_values():
+            sheet.append_row(list(data_dict.keys()))
+
+        # Append data
+        sheet.append_row(list(data_dict.values()))
+        return True
+
+    except Exception as e:
+        st.error(f"Google Sheets error: {e}")
+        return False
+
+# ---------------------------------------------------------
+# PAGE 8 UI
 # ---------------------------------------------------------
 if st.session_state.page == 8:
     st.header(tq("final_title"))
 
-    # Compute scores
+    # 🔢 Compute scores (UNCHANGED)
     scores = compute_scores(st.session_state.responses)
 
     st.success(tq("final_thanks"))
-
     st.subheader(tq("final_scores"))
 
     col1, col2 = st.columns(2)
@@ -533,33 +572,36 @@ if st.session_state.page == 8:
         st.metric("🧠 Cognitive Efficiency (8–40)", scores["cognitive_efficiency"])
         st.metric("🔥 Lifestyle Risk (higher = worse)", scores["lifestyle_risk"])
 
-    # ---------------- SAVE TO CSV ---------------------
+    # -------------------------------------------------
+    # PREPARE DATA FOR GOOGLE SHEET
+    # -------------------------------------------------
     save_data = {
-        "timestamp": datetime.now(),
+        "timestamp": datetime.now().isoformat(),
         "language": st.session_state.locked_lang
     }
 
-    # Add responses
-    for k,v in st.session_state.responses.items():
+    # Add all question responses
+    for k, v in st.session_state.responses.items():
         save_data[k] = v
 
     # Add computed scores
-    for k,v in scores.items():
+    for k, v in scores.items():
         save_data[k] = v
 
-    df = pd.DataFrame([save_data])
+    # -------------------------------------------------
+    # SAVE TO GOOGLE SHEET
+    # -------------------------------------------------
+    success = append_to_google_sheet(save_data)
 
-    try:
-        old = pd.read_csv("responses.csv")
-        df = pd.concat([old, df], ignore_index=True)
-    except:
-        pass
+    if success:
+        st.success("✅ Your response has been saved successfully.")
+    else:
+        st.error("❌ Failed to save your response. Please try again later.")
 
-    df.to_csv("responses.csv", index=False)
-
-    st.success(tq("final_saved"))
-
+    # -------------------------------------------------
+    # SHOW FINAL RECORD (USER VIEW)
+    # -------------------------------------------------
     st.write("### 🔽 Your Final Record")
-    st.dataframe(df.tail(1))
+    st.dataframe(pd.DataFrame([save_data]))
 
     st.write(tq("done_message"))
