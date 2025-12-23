@@ -529,26 +529,26 @@ def append_to_google_sheet(data_dict):
             "https://www.googleapis.com/auth/drive"
         ]
 
-        creds = Credentials.from_service_account_file(
-            GSHEET_FILE,
+        creds = Credentials.from_service_account_info(
+            st.secrets["gcp_service_account"],
             scopes=scopes
         )
-        client = gspread.authorize(creds)
 
-        sheet = client.open(SHEET_NAME).worksheet(WORKSHEET_NAME)
+        client = gspread.authorize(creds)
+        sheet = client.open(Database).worksheet(Sheet1)
 
         # Add headers if sheet is empty
         if not sheet.get_all_values():
             sheet.append_row(list(data_dict.keys()))
 
-        # Append data
+        # Append row
         sheet.append_row(list(data_dict.values()))
         return True
 
     except Exception as e:
         st.error(f"Google Sheets error: {e}")
         return False
-
+        
 # ---------------------------------------------------------
 # PAGE 8 UI
 # ---------------------------------------------------------
