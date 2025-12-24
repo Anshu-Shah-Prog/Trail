@@ -333,15 +333,8 @@ st.markdown("""
 </style>
 """, unsafe_allow_html=True)
 
-LIKERT_LABELS = {
-    1: "😄",
-    2: "🙂",
-    3: "😐",
-    4: "🙁",
-    5: "😫"
-}
 
-def likert_row(qkey, question, scale=LIKERT_LABELS):
+def likert_row(qkey, question, scale=[1,2,3,4,5]):
     """
     Single-row Likert scale (1–5) with no default selection.
     Stores numeric value as STRING to match your scoring logic.
