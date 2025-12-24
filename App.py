@@ -453,7 +453,7 @@ if st.session_state.page == 2:
         qtext = t(lang, f"Q.{q}.q", f"[MISSING QUESTION {q}]")
         opts = t(lang, f"Q.{q}.opts", [])
         st.markdown("<div class='card'>", unsafe_allow_html=True)
-        mcq_buttons(qkey, question, options)
+        mcq_buttons(q, question, options)
         st.markdown("</div>", unsafe_allow_html=True)
 
 
@@ -487,7 +487,7 @@ if st.session_state.page == 3:
         qtext = t(lang, f"Q.{q}.q", f"[MISSING QUESTION {q}]")
         opts = t(lang, f"Q.{q}.opts", [])
         st.markdown("<div class='card'>", unsafe_allow_html=True)
-        mcq_buttons(qkey, question, options)
+        mcq_buttons(q, question, options)
         st.markdown("</div>", unsafe_allow_html=True)
 
     col1, col2, col3 = st.columns([1,1,4])
@@ -576,7 +576,7 @@ if st.session_state.page == 6:
         qtext = t(lang, f"Q.{q}.q", f"[MISSING QUESTION {q}]")
         opts = t(lang, f"Q.{q}.opts", [])
         st.markdown("<div class='card'>", unsafe_allow_html=True)
-        mcq_buttons(qkey, question, options)
+        mcq_buttons(q, question, options)
         st.markdown("</div>", unsafe_allow_html=True)
 
     col1, col2, col3 = st.columns([1,1,4])
@@ -606,7 +606,7 @@ if st.session_state.page == 7:
         qtext = t(lang, f"Q.{q}.q", f"[MISSING QUESTION {q}]")
         opts = t(lang, f"Q.{q}.opts", [])
         st.markdown("<div class='card'>", unsafe_allow_html=True)
-        mcq_buttons(qkey, question, options)
+        mcq_buttons(q, question, options)
         st.markdown("</div>", unsafe_allow_html=True)
 
     col1, col2, col3 = st.columns([1,1,4])
