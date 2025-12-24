@@ -749,7 +749,7 @@ if st.session_state.page == 8:
     success = append_to_google_sheet(save_data)
 
     if success:
-        sst.balloons()
+        st.balloons()
         st.caption("🎉 Thank you for contributing to sleep science!")
     else:
         st.error("❌ Failed to save your response. Please try again later.")
