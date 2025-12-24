@@ -298,9 +298,9 @@ else:
         st.write("Use the Next/Back buttons at the bottom of each page to navigate through the questionnaire.")
         # Next parts (Section rendering) are in Part 3 — they will pick up st.session_state.locked_lang
 
-def mcq_buttons(qkey, question, options):
-    if qkey not in st.session_state.responses:
-        st.session_state.responses[qkey] = None
+def mcq_buttons(q, question, options):
+    if q not in st.session_state.responses:
+        st.session_state.responses[q] = None
 
     st.markdown(f"""
     <div class="q-card">
@@ -309,11 +309,11 @@ def mcq_buttons(qkey, question, options):
 
     cols = st.columns(len(options))
     for i, opt in enumerate(options):
-        selected = st.session_state.responses[qkey] == opt
+        selected = st.session_state.responses[q] == opt
         label = f"✅ {opt}" if selected else opt
 
-        if cols[i].button(label, key=f"{qkey}_{i}"):
-            st.session_state.responses[qkey] = opt
+        if cols[i].button(label, key=f"{q}_{i}"):
+            st.session_state.responses[q] = opt
             st.rerun()
 
     st.markdown("</div>", unsafe_allow_html=True)
