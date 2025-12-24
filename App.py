@@ -8,6 +8,61 @@ import os
 
 st.set_page_config(page_title="Chronotype & Brain Efficiency", layout="wide")
 
+st.markdown("""
+<style>
+/* HERO */
+.hero {
+    background: linear-gradient(135deg, #f5f7fa, #e4ecf7);
+    padding: 28px;
+    border-radius: 16px;
+    margin-bottom: 20px;
+}
+.hero h1 {
+    font-size: 1.8rem;
+}
+.hero p {
+    font-size: 1rem;
+    color: #444;
+}
+.badge {
+    display: inline-block;
+    background: #e8f5e9;
+    color: #2e7d32;
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    margin-right: 8px;
+}
+
+/* QUESTION CARD */
+.q-card {
+    background: #ffffff;
+    padding: 18px;
+    border-radius: 14px;
+    margin-bottom: 16px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+}
+.q-title {
+    font-weight: 600;
+    margin-bottom: 10px;
+}
+
+/* BUTTONS (mobile friendly) */
+div.stButton > button {
+    width: 100%;
+    padding: 10px;
+    border-radius: 10px;
+}
+
+/* NEXT BUTTON */
+.next-btn button {
+    background-color: #1976D2;
+    color: white;
+    font-weight: 600;
+}
+</style>
+""", unsafe_allow_html=True)
+
 # -- Load translations.json (must be in same directory) --
 TRANS_PATH = "translations.json"
 if not os.path.exists(TRANS_PATH):
@@ -88,9 +143,17 @@ def page_intro():
     start_btn_label = t(lang, "start", TRANSLATIONS["en"].get("start", "Start Survey"))
     next_label = t(lang, "next", TRANSLATIONS["en"].get("next", "Next →"))
 
-    st.title(title)
-    st.write(desc)
-    st.markdown("---")
+    st.markdown("""
+    <div class="hero">
+      <h1>🧠 Morning Minds & Night Owls</h1>
+      <p>Please answer honestly. Responses are anonymous.</p>
+      <div>
+        <span class="badge">⏱ 7–10 minutes</span>
+        <span class="badge">🔒 Anonymous</span>
+        <span class="badge">📊 Research-based</span>
+      </div>
+    </div>
+    """, unsafe_allow_html=True)
 
     # Language options shown here on Page 1
     col1, col2 = st.columns([2, 1])
@@ -166,34 +229,33 @@ else:
                 st.rerun()
 
         st.markdown("---")
+        TOTAL_PAGES = 8
+        progress = st.session_state.page / TOTAL_PAGES
+        st.progress(progress)
+        st.caption(f"Section {st.session_state.page - 1} of {TOTAL_PAGES - 1}")
+        
         st.write("Use the Next/Back buttons at the bottom of each page to navigate through the questionnaire.")
         # Next parts (Section rendering) are in Part 3 — they will pick up st.session_state.locked_lang
+
 def mcq_buttons(qkey, question, options):
-    """
-    Button-based MCQ with NO default selection.
-    Stores selected value in st.session_state.responses[qkey]
-    """
-    # Initialize response if not present
     if qkey not in st.session_state.responses:
         st.session_state.responses[qkey] = None
 
-    st.write(question)
+    st.markdown(f"""
+    <div class="q-card">
+      <div class="q-title">{question}</div>
+    """, unsafe_allow_html=True)
 
     cols = st.columns(len(options))
     for i, opt in enumerate(options):
-        is_selected = st.session_state.responses[qkey] == opt
-
-        # Visual feedback using button label
-        label = f"✅ {opt}" if is_selected else opt
+        selected = st.session_state.responses[qkey] == opt
+        label = f"✅ {opt}" if selected else opt
 
         if cols[i].button(label, key=f"{qkey}_{i}"):
             st.session_state.responses[qkey] = opt
             st.rerun()
 
-    # Small spacing
-    st.write("")
-
-
+    st.markdown("</div>", unsafe_allow_html=True)
 
 # ---------------------------------------------------------
 # PART 3 — SECTION A to SECTION F (Multilingual Pages)
@@ -271,7 +333,15 @@ st.markdown("""
 </style>
 """, unsafe_allow_html=True)
 
-def likert_row(qkey, question, scale=(1,2,3,4,5)):
+LIKERT_LABELS = {
+    1: "😄",
+    2: "🙂",
+    3: "😐",
+    4: "🙁",
+    5: "😫"
+}
+
+def likert_row(qkey, question, scale=LIKERT_LABELS):
     """
     Single-row Likert scale (1–5) with no default selection.
     Stores numeric value as STRING to match your scoring logic.
@@ -335,9 +405,12 @@ if st.session_state.page == 2:
 
     with col2:
         disabled = unanswered(required)
+        st.markdown('<div class="next-btn">', unsafe_allow_html=True)
         if st.button(tq("next"), disabled=disabled):
-            st.session_state.page = 3
+            st.session_state.page += 1
             st.rerun()
+        st.markdown('</div>', unsafe_allow_html=True)
+
 
 # ---------------------------------------------------------
 # SECTION B — Sleep Behaviour (Page 3)
@@ -361,9 +434,12 @@ if st.session_state.page == 3:
 
     with col2:
         disabled = unanswered(required)
+        st.markdown('<div class="next-btn">', unsafe_allow_html=True)
         if st.button(tq("next"), disabled=disabled):
-            st.session_state.page = 4
+            st.session_state.page += 1
             st.rerun()
+        st.markdown('</div>', unsafe_allow_html=True)
+
 
 # ---------------------------------------------------------
 # SECTION C — Mental Health (Page 4)
@@ -392,9 +468,11 @@ if st.session_state.page == 4:
 
     with col2:
         disabled = unanswered(required)
+        st.markdown('<div class="next-btn">', unsafe_allow_html=True)
         if st.button(tq("next"), disabled=disabled):
-            st.session_state.page = 5
+            st.session_state.page += 1
             st.rerun()
+        st.markdown('</div>', unsafe_allow_html=True)
 
 # ---------------------------------------------------------
 # SECTION D — Cognitive Performance (Page 5)
@@ -415,9 +493,11 @@ if st.session_state.page == 5:
 
     with col2:
         disabled = unanswered(required)
+        st.markdown('<div class="next-btn">', unsafe_allow_html=True)
         if st.button(tq("next"), disabled=disabled):
-            st.session_state.page = 6
+            st.session_state.page += 1
             st.rerun()
+        st.markdown('</div>', unsafe_allow_html=True)
 
 # ---------------------------------------------------------
 # SECTION E — Productivity Pattern (Page 6)
@@ -441,9 +521,11 @@ if st.session_state.page == 6:
 
     with col2:
         disabled = unanswered(required)
+        st.markdown('<div class="next-btn">', unsafe_allow_html=True)
         if st.button(tq("next"), disabled=disabled):
-            st.session_state.page = 7
+            st.session_state.page += 1
             st.rerun()
+        st.markdown('</div>', unsafe_allow_html=True)
 
 # ---------------------------------------------------------
 # SECTION F — Lifestyle & Sleep Hygiene (Page 7)
@@ -467,9 +549,12 @@ if st.session_state.page == 7:
 
     with col2:
         disabled = unanswered(required)
+        st.markdown('<div class="next-btn">', unsafe_allow_html=True)
         if st.button(tq("next"), disabled=disabled):
-            st.session_state.page = 8
+            st.session_state.page += 1
             st.rerun()
+        st.markdown('</div>', unsafe_allow_html=True)
+
 
 # ---------------------------------------------------------
 # PART 4 — SCORE CALCULATION & FINAL PAGE (Page 8)
@@ -664,7 +749,8 @@ if st.session_state.page == 8:
     success = append_to_google_sheet(save_data)
 
     if success:
-        st.success("✅ Your response has been saved successfully.")
+        sst.balloons()
+        st.caption("🎉 Thank you for contributing to sleep science!")
     else:
         st.error("❌ Failed to save your response. Please try again later.")
 
