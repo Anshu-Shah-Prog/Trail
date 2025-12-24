@@ -254,6 +254,63 @@ def unanswered(required_keys):
 def answer(qkey, value):
     st.session_state.responses[qkey] = value
 
+st.markdown("""
+<style>
+.likert-row {
+    margin-bottom: 12px;
+}
+.likert-cell button {
+    width: 100%;
+    height: 42px;
+    border-radius: 6px;
+}
+.likert-selected {
+    background-color: #2E7D32 !important;
+    color: white !important;
+}
+</style>
+""", unsafe_allow_html=True)
+
+def likert_row(qkey, question, scale=(1,2,3,4,5)):
+    """
+    Single-row Likert scale (1–5) with no default selection.
+    Stores numeric value as STRING to match your scoring logic.
+    """
+
+    if qkey not in st.session_state.responses:
+        st.session_state.responses[qkey] = None
+
+    st.markdown(f"<div class='likert-row'><b>{question}</b></div>", unsafe_allow_html=True)
+
+    cols = st.columns(len(scale) + 1)
+    cols[0].write("")  # spacer for question column
+
+    for i, val in enumerate(scale):
+        selected = st.session_state.responses[qkey] == str(val)
+        btn_label = f"✅ {val}" if selected else str(val)
+
+        if cols[i+1].button(
+            btn_label,
+            key=f"{qkey}_{val}"
+        ):
+            st.session_state.responses[qkey] = str(val)
+            st.rerun()
+            
+def likert_grid(qkeys):
+    lang = st.session_state.locked_lang
+
+    # Header row
+    hdr = st.columns(6)
+    hdr[0].write("")
+    for i in range(1,6):
+        hdr[i].markdown(f"**{i}**")
+
+    for q in qkeys:
+        qtext = t(lang, f"Q.{q}.q", f"[MISSING QUESTION {q}]")
+        likert_row(q, qtext)
+
+
+
 # ---------------------------------------------------------
 # SECTION A — Demographics (Page 2)
 # ---------------------------------------------------------
@@ -319,16 +376,13 @@ if st.session_state.page == 4:
                 "C6","C7","C8","C9","C10","C11","C12"]
 
     st.subheader(tq("sections.C.sub_who5"))
-    for q in ["C1","C2","C3","C4","C5"]:
-        qtext = t(lang, f"Q.{q}.q", f"[MISSING QUESTION {q}]")
-        opts = t(lang, f"Q.{q}.opts", [])
-        mcq_buttons(q, qtext, opts)
+    likert_grid(required)
 
-    st.subheader(tq("sections.C.sub_dass"))
-    for q in ["C6","C7","C8","C9","C10","C11","C12"]:
-        qtext = t(lang, f"Q.{q}.q", f"[MISSING QUESTION {q}]")
-        opts = t(lang, f"Q.{q}.opts", [])
-        mcq_buttons(q, qtext, opts)
+    # st.subheader(tq("sections.C.sub_dass"))
+    # for q in ["C6","C7","C8","C9","C10","C11","C12"]:
+    #     qtext = t(lang, f"Q.{q}.q", f"[MISSING QUESTION {q}]")
+    #     opts = t(lang, f"Q.{q}.opts", [])
+    #     mcq_buttons(q, qtext, opts)
 
     col1, col2, col3 = st.columns([1,1,4])
     with col1:
@@ -350,11 +404,8 @@ if st.session_state.page == 5:
     lang = st.session_state.locked_lang
 
     required = ["D1","D2","D3","D4","D5","D6","D7","D8","D9"]
-
-    for q in required:
-        qtext = t(lang, f"Q.{q}.q", f"[MISSING QUESTION {q}]")
-        opts = t(lang, f"Q.{q}.opts", [])
-        mcq_buttons(q, qtext, opts)
+    likert_grid(required)
+    
 
     col1, col2, col3 = st.columns([1,1,4])
     with col1:
