@@ -6,6 +6,67 @@ import matplotlib.pyplot as plt
 from datetime import datetime
 import os
 
+st.markdown("""
+<style>
+/* ===== Page background ===== */
+[data-testid="stAppViewContainer"] {
+    background: linear-gradient(135deg, #f0f9ff, #e0f2fe);
+}
+
+/* ===== Question Card ===== */
+.card {
+    background: white;
+    padding: 20px;
+    border-radius: 16px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+    margin-bottom: 20px;
+}
+
+/* ===== Likert Group Card ===== */
+.likert-card {
+    background: #f8fafc;
+    padding: 20px;
+    border-radius: 16px;
+    border-left: 6px solid #38bdf8;
+    margin-bottom: 25px;
+}
+
+/* ===== Section Header ===== */
+.section-title {
+    font-size: 24px;
+    font-weight: 700;
+    margin-bottom: 10px;
+    color: #0f172a;
+}
+
+/* ===== Buttons ===== */
+div.stButton > button {
+    width: 100%;
+    border-radius: 10px;
+    font-size: 16px;
+    font-weight: 600;
+}
+
+/* ===== Selected Likert Button ===== */
+button[kind="primary"] {
+    background-color: #22c55e !important;
+    color: white !important;
+}
+
+/* ===== Disabled Next Button ===== */
+.next-disabled button {
+    background-color: #94a3b8 !important;
+    color: white !important;
+}
+
+/* ===== Enabled Next Button ===== */
+.next-enabled button {
+    background-color: #22c55e !important;
+    color: white !important;
+}
+</style>
+""", unsafe_allow_html=True)
+
 st.set_page_config(page_title="Chronotype & Brain Efficiency", layout="wide")
 
 st.markdown("""
@@ -359,20 +420,25 @@ def likert_row(qkey, question, scale=[1,2,3,4,5]):
             st.session_state.responses[qkey] = str(val)
             st.rerun()
             
-def likert_grid(qkeys):
+def likert_grid(qkeys, card_color="#38bdf8"):
     lang = st.session_state.locked_lang
+
+    st.markdown(
+        f"<div class='likert-card' style='border-left-color:{card_color};'>",
+        unsafe_allow_html=True
+    )
 
     # Header row
     hdr = st.columns(6)
     hdr[0].write("")
-    for i in range(1,6):
+    for i in range(1, 6):
         hdr[i].markdown(f"**{i}**")
 
     for q in qkeys:
         qtext = t(lang, f"Q.{q}.q", f"[MISSING QUESTION {q}]")
         likert_row(q, qtext)
 
-
+    st.markdown("</div>", unsafe_allow_html=True)
 
 # ---------------------------------------------------------
 # SECTION A — Demographics (Page 2)
@@ -386,7 +452,10 @@ if st.session_state.page == 2:
     for q in required:
         qtext = t(lang, f"Q.{q}.q", f"[MISSING QUESTION {q}]")
         opts = t(lang, f"Q.{q}.opts", [])
-        mcq_buttons(q, qtext, opts)
+        st.markdown("<div class='card'>", unsafe_allow_html=True)
+        mcq_buttons(qkey, question, options)
+        st.markdown("</div>", unsafe_allow_html=True)
+
 
     # Navigation buttons
     col1, col2, col3 = st.columns([1,1,4])
@@ -417,7 +486,9 @@ if st.session_state.page == 3:
     for q in required:
         qtext = t(lang, f"Q.{q}.q", f"[MISSING QUESTION {q}]")
         opts = t(lang, f"Q.{q}.opts", [])
-        mcq_buttons(q, qtext, opts)
+        st.markdown("<div class='card'>", unsafe_allow_html=True)
+        mcq_buttons(qkey, question, options)
+        st.markdown("</div>", unsafe_allow_html=True)
 
     col1, col2, col3 = st.columns([1,1,4])
     with col1:
@@ -445,7 +516,7 @@ if st.session_state.page == 4:
                 "C6","C7","C8","C9","C10","C11","C12"]
 
     st.subheader(tq("sections.C.sub_who5"))
-    likert_grid(required)
+    likert_grid(required, card_color="#22c55e")
 
     # st.subheader(tq("sections.C.sub_dass"))
     # for q in ["C6","C7","C8","C9","C10","C11","C12"]:
@@ -475,7 +546,7 @@ if st.session_state.page == 5:
     lang = st.session_state.locked_lang
 
     required = ["D1","D2","D3","D4","D5","D6","D7","D8","D9"]
-    likert_grid(required)
+    likert_grid(required, card_color="#38bdf8")
     
 
     col1, col2, col3 = st.columns([1,1,4])
@@ -504,7 +575,9 @@ if st.session_state.page == 6:
     for q in required:
         qtext = t(lang, f"Q.{q}.q", f"[MISSING QUESTION {q}]")
         opts = t(lang, f"Q.{q}.opts", [])
-        mcq_buttons(q, qtext, opts)
+        st.markdown("<div class='card'>", unsafe_allow_html=True)
+        mcq_buttons(qkey, question, options)
+        st.markdown("</div>", unsafe_allow_html=True)
 
     col1, col2, col3 = st.columns([1,1,4])
     with col1:
@@ -532,7 +605,9 @@ if st.session_state.page == 7:
     for q in required:
         qtext = t(lang, f"Q.{q}.q", f"[MISSING QUESTION {q}]")
         opts = t(lang, f"Q.{q}.opts", [])
-        mcq_buttons(q, qtext, opts)
+        st.markdown("<div class='card'>", unsafe_allow_html=True)
+        mcq_buttons(qkey, question, options)
+        st.markdown("</div>", unsafe_allow_html=True)
 
     col1, col2, col3 = st.columns([1,1,4])
     with col1:
