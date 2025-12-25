@@ -65,19 +65,20 @@ def append_to_google_sheet(data_dict, sheet_name="Database"):
             "https://www.googleapis.com/auth/spreadsheets",
             "https://www.googleapis.com/auth/drive"
         ]
-        creds = Credentials.from_service_account_info(st.secrets["gcp_service_account"], scopes=scopes)
+        creds = Credentials.from_service_account_info(
+            st.secrets["gcp_service_account"], scopes=scopes
+        )
         client = gspread.authorize(creds)
         sheet = client.open(sheet_name).sheet1
 
-        # Check if the sheet is empty
-        all_values = sheet.get_all_values()
-        if not all_values:
+        # Add headers if sheet is empty
+        if not sheet.get_all_values():
             sheet.append_row(list(data_dict.keys()))
-            st.info("Header row added to sheet.")
+            st.info("Header row added.")
 
-        # Append the data row
+        # Append data
         sheet.append_row(list(data_dict.values()))
-        st.success("Data appended to Google Sheet successfully!")
+        st.success("Data appended successfully!")
         return True
 
     except gspread.exceptions.APIError as e:
