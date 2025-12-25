@@ -212,6 +212,7 @@ def render_section_c():
 def show_final():
     lang = st.session_state.locked_lang
     scores = compute_scores(st.session_state.responses, lang)
+    st.title(t(lang, "title"))
 
     st.success(t(lang, "final_thanks", "Thank you for completing the assessment!"))
     st.subheader(t(lang, "final_scores", "Your Scores"))
@@ -241,11 +242,12 @@ def show_final():
             **scores
         }
 
-        # Debug log to check data
-        st.write("Saving data to Google Sheets:", save_data)
+        # # Debug log to check data
+        # st.write("Saving data to Google Sheets:", save_data)
 
         if append_to_google_sheet(save_data):
-            st.success(t(lang, "Your responses have been securely saved."))
+            st.success(t(lang, "final_saved"))
+            st.write(t(lang, "done_message"))
             st.session_state.data_saved = True  # prevent duplicate saves
         else:
             st.error("Failed to save data to Google Sheets. Please contact admin.")
