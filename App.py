@@ -39,31 +39,24 @@ def render_section(section_id, q_list, next_p):
     
     for q in q_list:
         data = t_question(lang, q)
-        q_text = data.get("q", f"Question {q}")
-        opts = data.get("opts", [])
-        
-        # FIXED: Save the selection directly to session_state.responses
-        choice = st.radio(
-            q_text,
-            opts,
-            index=None,
-            key=f"ans_{q}"
-        )
-
+        # index=None ensures NO radio button is selected by default
+        choice = st.radio(data.get("q"), data.get("opts", []), index=None, key=f"ans_{q}")
         st.session_state.responses[q] = choice
 
-        # Special logic for B14 text box
         if q == "B14" and choice in ["Yes", "हाँ", "होय"]:
-            st.session_state.responses["B14_details"] = st.text_input(
-                "Please specify / कृपया स्पष्ट करें / कृपया स्पष्ट करा:", 
-                key="input_B14_details"
-            )
+            st.session_state.responses["B14_details"] = st.text_input("Specify:", key="input_B14_details")
+
+    # Check if all questions in this section have been answered
+    answered_all = all(st.session_state.responses.get(q) is not None for q in q_list)
 
     col1, col2 = st.columns(2)
-    with col1: 
+    with col1:
         if st.button(t(lang, "back", "Back")): prev_page(); st.rerun()
     with col2:
-        if st.button(t(lang, "next", "Next")): st.session_state.page = next_p; st.rerun()
+        if answered_all:
+            if st.button(t(lang, "next", "Next")): st.session_state.page = next_p; st.rerun()
+        else:
+            st.warning("Please answer all questions to continue / कृपया आगे बढ़ने के लिए सभी प्रश्नों के उत्तर दें")
 
 def render_section_c():
     lang = st.session_state.locked_lang
@@ -94,26 +87,26 @@ def render_section_c():
 
 def show_final():
     lang = st.session_state.locked_lang
-    # Use the scoring logic from test_compute_scores.py
     scores = compute_scores(st.session_state.responses, lang)
 
     st.header(t(lang, "final_title"))
     
-    metric_labels = t(lang, "final_metrics")
+    # Access the metrics labels correctly
+    # This pulls "final_metrics" -> "en" (or "hi"/"mr")
+    labels = t(lang, f"final_metrics") 
+    
     col1, col2 = st.columns(2)
-
     with col1:
-        st.metric(metric_labels["sleep_quality"], scores["sleep_quality"])
-        st.metric(metric_labels["WHO_total"], f"{scores['WHO_total']}%")
-        st.metric(metric_labels["distress_total"], scores["distress_total"])
+        st.metric("🌙 Sleep Quality (3–15)", scores["sleep_quality"])
+        st.metric("🙂 WHO-5 Well-being (0–100)", scores["WHO_total"])
+        st.metric("⚠️ Mental Distress (6–30)", scores["distress_total"])
 
     with col2:
-        st.metric(metric_labels["cognitive_efficiency"], scores["cognitive_efficiency"])
-        st.metric(metric_labels["lifestyle_risk"], scores["lifestyle_risk"])
+        st.metric("🧠 Cognitive Efficiency (8–40)", scores["cognitive_efficiency"])
+        st.metric("🔥 Lifestyle Risk (higher = worse)", scores["lifestyle_risk"])
     
     st.balloons()
     
-    # Save Data
     save_data = {
         "timestamp": datetime.now().strftime("%Y-%m-%d %H:%M:%S"), 
         "lang": lang, 
@@ -132,34 +125,21 @@ elif st.session_state.page == 2:
 elif st.session_state.page == 3:
     lang = st.session_state.locked_lang
     st.header(t(lang, "sections.B"))
+    q_list = [f"B{i}" for i in range(1, 15)]
 
-    # Questions list
-    questions = [f"B{i}" for i in range(1, 15)]
-
-    for q in questions:
+    for q in q_list:
         data = t_question(lang, q)
-        q_text = data.get("q", f"Question {q}")
-        opts = data.get("opts", [])
-
-        # Skip if options are empty (safety)
-        if not opts:
-            st.warning(f"Options missing for {q}")
-            continue
-
-        # Use a unique key for each radio to force Streamlit to render
-        key_name = f"ans_{q}"
-
-        # Render the radio button
-        choice = st.radio(q_text, opts, index=0 if q != "B14" else None, key=key_name)
-
+        choice = st.radio(data.get("q"), data.get("opts"), index=None, key=f"ans_{q}")
         st.session_state.responses[q] = choice
-
-        # Conditional input for B14
+        
         if q == "B14" and choice in ["Yes", "हाँ", "होय"]:
-            st.session_state.responses["B14_details"] = st.text_input(
-                "Please specify / कृपया स्पष्ट करें / कृपया स्पष्ट करा:",
-                key="input_B14_details"
-            )
+            st.session_state.responses["B14_details"] = st.text_input("Specify:", key="b14_reg")
+
+    # Validation
+    if all(st.session_state.responses.get(q) is not None for q in q_list):
+        if st.button(t(lang, "next", "Next")): st.session_state.page = 4; st.rerun()
+    else:
+        st.info("Answer all questions to proceed.")
 
     # Navigation buttons
     col1, col2 = st.columns(2)
