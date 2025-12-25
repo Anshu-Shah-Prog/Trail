@@ -14,6 +14,21 @@ if "locked_lang" not in st.session_state: st.session_state.locked_lang = None
 def next_page(): st.session_state.page += 1
 def prev_page(): st.session_state.page -= 1
 
+def show_intro():
+    lang = st.session_state.lang_choice
+    st.title(t(lang, "title", "Survey"))
+    st.write(t(lang, "desc", ""))
+
+    lang_options = ["en", "hi", "mr"]
+    lang_labels = {"en": "English", "hi": "हिन्दी", "mr": "मराठी"}
+    st.selectbox("Select Language", options=lang_options, format_func=lambda x: lang_labels[x], key="lang_choice")
+
+    if st.button(t(lang, "start", "Start")): st.session_state.locked_lang = st.session_state.lang_choice
+        st.session_state.responses = {}
+        next_page()
+        st.rerun()
+
+
 # --- Unified Section Renderer ---
 def render_section(section_id, q_list, next_p):
     lang = st.session_state.locked_lang
@@ -107,8 +122,7 @@ def show_final():
 
 # --- Navigation Logic ---
 if st.session_state.page == 1:
-    # Use show_intro logic from your previous code
-    pass 
+    show_intro()
 elif st.session_state.page == 2:
     render_section("A", ["A1", "A2", "A3", "A4", "A5", "A6", "A7"], 3)
 elif st.session_state.page == 3:
