@@ -202,9 +202,6 @@ def show_final():
 
     scores = compute_scores(st.session_state.responses)
 
-    st.write("t() test:", t("en", "final_thanks"))
-    st.subheader(t(lang, "final_scores"))
-
     col1, col2 = st.columns(2)
 
     with col1:
