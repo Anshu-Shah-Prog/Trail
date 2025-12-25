@@ -8,21 +8,24 @@ TRANS_PATH = "translations.json"
 
 @st.cache_data
 def load_translations():
-    with open(TRANS_PATH, "r", encoding="utf-8") as f:
-        return json.load(f)
+    if not os.path.exists(TRANS_PATH):
+        st.error("Missing translations.json file!")
+        return {}
+    try:
+        with open(TRANS_PATH, "r", encoding="utf-8") as f:
+            return json.load(f)
+    except json.JSONDecodeError as e:
+        st.error(f"Error in translations.json syntax: {e}")
+        return {}
 
 TRANSLATIONS = load_translations()
 
-def t_question(lang_code, q_id):
-    """Specific helper to get question text and options dictionary"""
-    # Navigates to TRANSLATIONS[lang][Q][q_id]
-    q_data = t(lang_code, f"Q.{q_id}")
-    if q_data and isinstance(q_data, dict):
-        return q_data
-    return {"q": f"Missing Question {q_id}", "opts": []}
-
 def t(lang_code, key, default=None):
     """Core translation lookup logic"""
+    # Safety check if JSON failed to load
+    if not TRANSLATIONS:
+        return default or key
+        
     lang_block = TRANSLATIONS.get(lang_code, {})
     cur = lang_block
     if key:
@@ -35,12 +38,15 @@ def t(lang_code, key, default=None):
                 break
         if cur is not None: return cur
 
-    top_val = TRANSLATIONS.get(key)
-    if isinstance(top_val, dict) and lang_code in top_val:
-        return top_val[lang_code]
-    
     return default
 
+def t_question(lang_code, q_id):
+    """Specific helper to get question data safely"""
+    q_data = t(lang_code, f"Q.{q_id}")
+    if q_data and isinstance(q_data, dict):
+        return q_data
+    return {"q": f"Question {q_id} not found", "opts": []}
+    
 def append_to_google_sheet(data_dict, sheet_name="Database"):
     try:
         scopes = ["https://www.googleapis.com/auth/spreadsheets", "https://www.googleapis.com/auth/drive"]
