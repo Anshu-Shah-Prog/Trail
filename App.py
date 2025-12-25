@@ -210,6 +210,7 @@ def show_final():
     scores = compute_scores(st.session_state.responses)
 
     # Display final scores header
+    st.success(t(lang, "final_thanks"))
     st.subheader(t(lang, "final_scores"))
 
     # Columns for metrics
