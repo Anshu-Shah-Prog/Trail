@@ -245,7 +245,7 @@ def show_final():
         st.write("Saving data to Google Sheets:", save_data)
 
         if append_to_google_sheet(save_data):
-            st.success(t(lang, "final_saved", "Your responses have been securely saved."))
+            st.success(t(lang, "Your responses have been securely saved."))
             st.session_state.data_saved = True  # prevent duplicate saves
         else:
             st.error("Failed to save data to Google Sheets. Please contact admin.")
