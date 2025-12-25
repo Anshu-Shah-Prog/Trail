@@ -113,7 +113,7 @@ def render_section(section_id, q_list, next_p):
         q_text = data.get("q", f"Question {q}")
         opts = data.get("opts", [])
 
-        choice = render_mcq_card(q_text, opts, index=None, key=f"ans_{q}", card_color="#e8f4f8")
+        choice = render_mcq_card(q_text, opts, key=f"ans_{q}", card_color="#e8f4f8")
         st.session_state.responses[q] = choice
 
         if q == "B14" and choice in ["Yes", "हाँ", "होय"]:
@@ -162,14 +162,14 @@ def render_section_c():
     st.subheader(t(lang, "sections.C_sub_who"))
     for q in qs[:5]:
         data = t_question(lang, q)
-        st.session_state.responses[q] = render_mcq_card(q_text, opts, index=None, key=f"ans_{q}", card_color="#e8f4f8")
+        st.session_state.responses[q] = render_mcq_card(q_text, opts, key=f"ans_{q}", card_color="#e8f4f8")
 
     st.divider()
 
     st.subheader(t(lang, "sections.C_sub_dass"))
     for q in qs[5:]:
         data = t_question(lang, q)
-        st.session_state.responses[q] = render_mcq_card(q_text, opts, index=None, key=f"ans_{q}", card_color="#e8f4f8")
+        st.session_state.responses[q] = render_mcq_card(q_text, opts, key=f"ans_{q}", card_color="#e8f4f8")
 
     unanswered = [
         q for q in qs
