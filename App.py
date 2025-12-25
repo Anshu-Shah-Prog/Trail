@@ -211,31 +211,30 @@ def render_section_c():
 # --------------------------------------------------
 def show_final():
     lang = st.session_state.locked_lang
-    scores = compute_scores(st.session_state.responses)
+    scores = compute_scores(st.session_state.responses, lang)
 
-    st.success(t(lang, "final_thanks"))
-    st.subheader(t(lang, "final_scores"))
+    st.success(t(lang, "final_thanks", "Thank you for completing the assessment!"))
+    st.subheader(t(lang, "final_scores", "Your Scores"))
 
-    # Display metrics using your translation
-    metrics = TRANSLATIONS["final_metrics"].get(lang, {})
+    # Display metrics using translations
+    metrics = TRANSLATIONS.get("final_metrics", {}).get(lang, {})
     col1, col2 = st.columns(2)
+
     with col1:
-        st.metric(metrics.get("sleep_quality", "🌙 Sleep Quality (3–15)"), scores["sleep_quality"])
-        st.metric(metrics.get("WHO_total", "🙂 WHO-5 Well-being (0–100)"), scores["WHO_total"])
-        st.metric(metrics.get("distress_total", "⚠️ Mental Distress (6–30)"), scores["distress_total"])
+        st.metric(metrics.get("sleep_quality", "🌙 Sleep Quality (3–15)"), scores.get("sleep_quality", 0))
+        st.metric(metrics.get("WHO_total", "🙂 WHO-5 Well-being (0–100)"), scores.get("WHO_total", 0))
+        st.metric(metrics.get("distress_total", "⚠️ Mental Distress (6–30)"), scores.get("distress_total", 0))
+
     with col2:
-        st.metric(metrics.get("cognitive_efficiency", "🧠 Cognitive Efficiency (8–40)"), scores["cognitive_efficiency"])
-        st.metric(metrics.get("lifestyle_risk", "🔥 Lifestyle Risk (higher = worse)"), scores["lifestyle_risk"])
+        st.metric(metrics.get("cognitive_efficiency", "🧠 Cognitive Efficiency (8–40)"), scores.get("cognitive_efficiency", 0))
+        st.metric(metrics.get("lifestyle_risk", "🔥 Lifestyle Risk (higher = worse)"), scores.get("lifestyle_risk", 0))
 
     st.balloons()
 
-    # Initialize flag if it doesn't exist
-    if "data_saved" not in st.session_state:
-        st.session_state.data_saved = False
-
-    # Save data only once
-    if not st.session_state.data_saved:
+    # Save data only once per session
+    if not st.session_state.get("data_saved", False):
         save_data = {
+            "survey_id": st.session_state.survey_id,
             "timestamp": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
             "lang": lang,
             **st.session_state.responses,
@@ -243,9 +242,8 @@ def show_final():
         }
 
         if append_to_google_sheet(save_data):
-            st.success(t(lang, "final_saved"))
+            st.success(t(lang, "final_saved", "Your responses have been securely saved."))
             st.session_state.data_saved = True  # prevent duplicate saves
-
             
 # --------------------------------------------------
 # Navigation Controller
