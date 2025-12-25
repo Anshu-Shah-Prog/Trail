@@ -81,6 +81,20 @@ def render_section_c():
 def show_final():
     lang = st.session_state.locked_lang
     scores = compute_scores(st.session_state.responses, lang)
+
+    st.success(tq("final_thanks"))
+    st.subheader(tq("final_scores"))
+
+    col1, col2 = st.columns(2)
+
+    with col1:
+        st.metric("🌙 Sleep Quality (3–15)", scores["sleep_quality"])
+        st.metric("🙂 WHO-5 Well-being (0–100)", scores["WHO_total"])
+        st.metric("⚠️ Mental Distress (6–30)", scores["distress_total"])
+
+    with col2:
+        st.metric("🧠 Cognitive Efficiency (8–40)", scores["cognitive_efficiency"])
+        st.metric("🔥 Lifestyle Risk (higher = worse)", scores["lifestyle_risk"])
     
     st.balloons()
     st.header("Results")
