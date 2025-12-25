@@ -42,10 +42,16 @@ def t(lang_code, key, default=None):
 
 def t_question(lang_code, q_id):
     """Specific helper to get question data safely"""
-    q_data = t(lang_code, f"Q.{q_id}")
+    # Force check the Q block directly
+    lang_block = TRANSLATIONS.get(lang_code, {})
+    q_dict = lang_block.get("Q", {})
+    q_data = q_dict.get(q_id)
+    
     if q_data and isinstance(q_data, dict):
         return q_data
-    return {"q": f"Question {q_id} not found", "opts": []}
+    
+    # Fallback if ID is missing
+    return {"q": f"Question {q_id} missing", "opts": ["Error: Options not found"]}
     
 def append_to_google_sheet(data_dict, sheet_name="Database"):
     try:
