@@ -202,8 +202,8 @@ def show_final():
 
     scores = compute_scores(st.session_state.responses)
 
-    st.success(t("final_thanks"))
-    st.subheader(t("final_scores"))
+    st.success(t(lang, "final_thanks"))
+    st.subheader(t(lang, "final_scores"))
 
     col1, col2 = st.columns(2)
 
@@ -226,8 +226,7 @@ def show_final():
     }
 
     if append_to_google_sheet(save_data):
-        st.success(t("saved"))
-
+        st.success(t(lang, "saved"))
 
 # --------------------------------------------------
 # Navigation Controller
