@@ -106,42 +106,7 @@ if st.session_state.page == 1:
 elif st.session_state.page == 2:
     render_section("A", ["A1", "A2", "A3", "A4", "A5", "A6", "A7"], 3)
 elif st.session_state.page == 3:
-    lang = st.session_state.locked_lang
-    st.header(t(lang, "sections.B"))
-    
-    # 1. Standard Questions: B1 to B13
-    b_questions = [f"B{i}" for i in range(1, 14)] 
-    
-    for q in b_questions:
-        data = t_question(lang, q)
-        # Use st.radio for the selection
-        choice = st.radio(data["q"], data["opts"], key=f"ans_{q}")
-        # Save choice to session state
-        st.session_state.responses[q] = choice
-
-    st.divider()
-
-    # 2. Special Question: B14 (with conditional text input)
-    q14_data = t_question(lang, "B14")
-    choice_14 = st.radio(q14_data["q"], q14_data["opts"], key="ans_B14")
-    st.session_state.responses["B14"] = choice_14
-    
-    # Check if user selected "Yes" (works for English, Hindi, and Marathi)
-    # We check against the second option in the list (index 1)
-    if choice_14 == q14_data["opts"][1]: 
-        spec_label = "Please specify / कृपया स्पष्ट करें / कृपया स्पष्ट करा:"
-        st.session_state.responses["B14_details"] = st.text_input(spec_label, key="B14_input")
-
-    # Navigation Buttons
-    col1, col2 = st.columns(2)
-    with col1:
-        if st.button(t(lang, "back", "Back")): 
-            prev_page()
-            st.rerun()
-    with col2:
-        if st.button(t(lang, "next", "Next")): 
-            st.session_state.page = 4
-            st.rerun()
+    render_section("B", ["B1", "B2", "B3", "B4", "B5", "B6", "B7","B8", "B9", "B10", "B11", "B12", "B13", "B14"], 4)
 elif st.session_state.page == 4:
     render_section_c()
 elif st.session_state.page == 5:
