@@ -139,7 +139,7 @@ def render_section_c():
     st.subheader(t(lang, "sections.C_sub_who"))
     for q in ["C1", "C2", "C3", "C4", "C5"]:
         data = t_question(lang, q)
-        choice = st.radio(data["q"], data["opts"], key=f"ans_{q}")
+        choice = st.radio(data["q"], data["opts"], index=None, key=f"ans_{q}")
         st.session_state.responses[q] = choice
 
     st.divider()
@@ -148,7 +148,7 @@ def render_section_c():
     st.subheader(t(lang, "sections.C_sub_dass"))
     for q in ["C6", "C7", "C8", "C9", "C10", "C11", "C12"]:
         data = t_question(lang, q)
-        choice = st.radio(data["q"], data["opts"], key=f"ans_{q}")
+        choice = st.radio(data["q"], data["opts"], index=None, key=f"ans_{q}")
         st.session_state.responses[q] = choice
 
     col1, col2 = st.columns(2)
