@@ -12,7 +12,7 @@ def render_mcq_card(q_text, options, key=None, card_color="#f0f4f8"):
             padding: 20px;
             border-radius: 10px;
             box-shadow: 2px 2px 10px rgba(0,0,0,0.1);
-            margin-bottom: 20px;
+            margin-bottom: 10px;
         ">
         <strong>{q_text}</strong>
         </div>
