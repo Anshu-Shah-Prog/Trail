@@ -210,18 +210,15 @@ def render_section_c():
 # Final Page
 # --------------------------------------------------
 def show_final():
-    # Get language and compute scores
     lang = st.session_state.locked_lang
     scores = compute_scores(st.session_state.responses)
 
-    # Display final scores header
+    # Display header
     st.title(t(lang, "title"))
     st.header(t(lang, "final_scores"))
 
     # Columns for metrics
     col1, col2 = st.columns(2)
-
-    # Get translated metric names
     metrics = t(lang, "final_metrics")
 
     with col1:
@@ -236,20 +233,20 @@ def show_final():
     st.balloons()
     st.success(t(lang, "final_thanks"))
 
-    # Prepare data to save
+    # --- Prepare data to save ---
     save_data = {
-        "survey_id": st.session_state.survey_id,
         "timestamp": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
         "lang": lang,
         **st.session_state.responses,
         **scores
     }
 
-    # Save only once per session
-    if not st.session_state.data_saved:
-        if append_to_google_sheet(save_data):
-            st.success(t(lang, "final_saved"))
+    # --- Save only once per session ---
+    if "data_saved" not in st.session_state or not st.session_state.data_saved:
+        success = append_to_google_sheet(save_data)
+        if success:
             st.session_state.data_saved = True
+            st.success(t(lang, "final_saved"))
         else:
             st.error("Failed to save data.")
             
