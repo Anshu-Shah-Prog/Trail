@@ -48,7 +48,10 @@ def scroll_to_top():
     st.markdown(
         """
         <script>
-            window.scrollTo(0, 0);
+        const mainContent = window.parent.document.querySelector('main');
+        if (mainContent) {
+            mainContent.scrollTo({ top: 0, behavior: 'smooth' });
+        }
         </script>
         """,
         unsafe_allow_html=True
