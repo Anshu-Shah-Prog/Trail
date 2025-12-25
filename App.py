@@ -7,6 +7,17 @@ from UI import render_mcq_card
 from test_compute_scores import compute_scores
 import uuid
 
+st.markdown(
+    """
+    <style>
+    .stApp {
+        background-color: #f7f9fc;
+    }
+    </style>
+    """,
+    unsafe_allow_html=True
+)
+
 # --- Generate a unique survey ID at the start of the session ---
 if "survey_id" not in st.session_state:
     st.session_state.survey_id = str(uuid.uuid4())
