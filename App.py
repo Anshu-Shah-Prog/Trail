@@ -199,9 +199,13 @@ def render_section_c():
 # --------------------------------------------------
 def show_final():
     lang = st.session_state.locked_lang
-
+    
     scores = compute_scores(st.session_state.responses)
+    st.write(t("en", "final_thanks"))  # Should show: "Thank you for completing the assessment!"
+    st.write(t("hi", "final_thanks"))  # Should show: "आकलन पूरा करने के लिए धन्यवाद!"
+    st.write(t("mr", "final_thanks"))
 
+    
     col1, col2 = st.columns(2)
 
     with col1:
