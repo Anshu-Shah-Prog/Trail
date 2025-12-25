@@ -155,7 +155,15 @@ def render_section(section_id, q_list, next_p):
         q_text = data.get("q", f"Question {q}")
         opts = data.get("opts", [])
 
-        choice = render_mcq_card(q_text, opts, key=f"ans_{q}", card_color="#e8f4f8")
+        # Get the previously saved response for this specific question
+        existing_ans = st.session_state.responses.get(q)
+
+        choice = render_mcq_card(
+            q_text, 
+            opts, 
+            key=f"ans_{q}", 
+            current_value=existing_ans # Pass it here
+        )
         st.session_state.responses[q] = choice
 
         if q == "B14" and choice in ["Yes", "हाँ", "होय"]:
@@ -203,19 +211,36 @@ def render_section_c():
 
     st.subheader(t(lang, "sections.C_sub_who"))
     for q in qs[:5]:
-        data = t_question(lang, q) # ADD THIS LINE
-        q_text = data.get("q", f"Question {q}") # ADD THIS LINE
-        opts = data.get("opts", []) # ADD THIS LINE
-        st.session_state.responses[q] = render_mcq_card(q_text, opts, key=f"ans_{q}", card_color="#e8f4f8")
+        data = t_question(lang, q)
+        q_text = data.get("q", f"Question {q}")
+        opts = data.get("opts", [])
+        
+        # Get saved answer
+        existing_ans = st.session_state.responses.get(q)
+        
+        st.session_state.responses[q] = render_mcq_card(
+            q_text, 
+            opts, 
+            key=f"ans_{q}", 
+            current_value=existing_ans
+        )
 
     st.divider()
 
-    st.subheader(t(lang, "sections.C_sub_dass"))
     for q in qs[5:]:
-        data = t_question(lang, q) # ADD THIS LINE
-        q_text = data.get("q", f"Question {q}") # ADD THIS LINE
-        opts = data.get("opts", []) # ADD THIS LINE
-        st.session_state.responses[q] = render_mcq_card(q_text, opts, key=f"ans_{q}", card_color="#e8f4f8")
+        data = t_question(lang, q)
+        q_text = data.get("q", f"Question {q}")
+        opts = data.get("opts", [])
+        
+        # Get saved answer
+        existing_ans = st.session_state.responses.get(q)
+        
+        st.session_state.responses[q] = render_mcq_card(
+            q_text, 
+            opts, 
+            key=f"ans_{q}", 
+            current_value=existing_ans
+        )
 
     unanswered = [
         q for q in qs
