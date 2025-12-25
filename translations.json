@@ -13,7 +13,9 @@
     "sections": {
       "A": "Section A — Demographics",
       "B": "Section B — Sleep Behaviour & Chronotype",
-      "C": "Section C — Mental Health (WHO-5 & DASS-short)",
+      "C": "Section C — Mental Health",
+      "C_sub_who": "WHO-5 Well-being Index",
+      "C_sub_dass": "DASS-short (Mental Distress)"
       "D": "Section D — Cognitive Performance",
       "E": "Section E — Productivity Pattern",
       "F": "Section F — Lifestyle & Sleep Hygiene",
@@ -84,7 +86,9 @@
     "sections": {
       "A": "खंड A — जनसांख्यिकी",
       "B": "खंड B — निद्रा व्यवहार एवं क्रोनोटाइप",
-      "C": "खंड C — मानसिक स्वास्थ्य (WHO-5 व DASS-short)",
+      "C": "खंड C — मानसिक स्वास्थ्य",
+      "C_sub_who": "WHO-5 कल्याण सूचकांक",
+      "C_sub_dass": "DASS-शॉर्ट (मानसिक संकट)",
       "D": "खंड D — संज्ञानात्मक प्रदर्शन",
       "E": "खंड E — उत्पादकता पैटर्न",
       "F": "खंड F — जीवनशैली और नींद स्वच्छता",
@@ -155,7 +159,9 @@
     "sections": {
       "A": "खंड A — लोकसंख्याशास्त्र",
       "B": "खंड B — झोप व क्रोनोटाइप",
-      "C": "खंड C — मानसिक आरोग्य (WHO-5 व DASS-short)",
+      "C": "खंड C — मानसिक आरोग्य",
+      "C_sub_who": "WHO-5 कल्याण निर्देशांक",
+      "C_sub_dass": "DASS-शॉर्ट (मानसिक त्रास)",
       "D": "खंड D — संज्ञानात्मक कामगिरी",
       "E": "खंड E — उत्पादकता नमुना",
       "F": "खंड F — जीवनशैली व झोप स्वच्छता",
