@@ -161,7 +161,7 @@ def render_section(section_id, q_list, next_p):
 # Section C (Custom layout)
 # --------------------------------------------------
 def render_section_c():
-lang = st.session_state.locked_lang
+    lang = st.session_state.locked_lang
     st.title(t(lang, "title"))
 
     show_progress()
