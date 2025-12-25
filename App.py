@@ -1,8 +1,8 @@
 import streamlit as st
 from datetime import datetime
 import pandas as pd
-from utils import t, append_to_google_sheet
-from test_compute_scores import compute_scores # Import your existing scoring logic
+from utils import t, t_question, append_to_google_sheet
+from test_compute_scores import compute_scores 
 
 st.set_page_config(page_title="Chronotype & Brain Efficiency", layout="wide")
 
@@ -42,14 +42,14 @@ def render_section(section_id, q_list, next_p):
         q_text = data.get("q", f"Question {q}")
         opts = data.get("opts", [])
         
-        # Display the question
+        # FIXED: Save the selection directly to session_state.responses
         choice = st.radio(q_text, opts, key=f"ans_{q}")
         st.session_state.responses[q] = choice
 
         # Special logic for B14 text box
         if q == "B14" and choice in ["Yes", "हाँ", "होय"]:
             st.session_state.responses["B14_details"] = st.text_input(
-                "Please specify / कृपया स्पष्ट करें:", 
+                "Please specify / कृपया स्पष्ट करें / कृपया स्पष्ट करा:", 
                 key="input_B14_details"
             )
 
@@ -59,8 +59,6 @@ def render_section(section_id, q_list, next_p):
     with col2:
         if st.button(t(lang, "next", "Next")): st.session_state.page = next_p; st.rerun()
 
-from utils import t, t_question, append_to_google_sheet # Update imports
-
 def render_section_c():
     lang = st.session_state.locked_lang
     st.header(t(lang, "sections.C"))
@@ -69,8 +67,8 @@ def render_section_c():
     st.subheader(t(lang, "sections.C_sub_who"))
     for q in ["C1", "C2", "C3", "C4", "C5"]:
         data = t_question(lang, q)
-        st.radio(data["q"], data["opts"], key=f"ans_{q}")
-        st.session_state.responses[q] = st.session_state.get(f"ans_{q}")
+        choice = st.radio(data["q"], data["opts"], key=f"ans_{q}")
+        st.session_state.responses[q] = choice
 
     st.divider()
 
@@ -78,8 +76,8 @@ def render_section_c():
     st.subheader(t(lang, "sections.C_sub_dass"))
     for q in ["C6", "C7", "C8", "C9", "C10", "C11", "C12"]:
         data = t_question(lang, q)
-        st.radio(data["q"], data["opts"], key=f"ans_{q}")
-        st.session_state.responses[q] = st.session_state.get(f"ans_{q}")
+        choice = st.radio(data["q"], data["opts"], key=f"ans_{q}")
+        st.session_state.responses[q] = choice
 
     # Navigation
     col1, col2 = st.columns(2)
@@ -90,25 +88,35 @@ def render_section_c():
 
 def show_final():
     lang = st.session_state.locked_lang
+    # Use the scoring logic from test_compute_scores.py
     scores = compute_scores(st.session_state.responses, lang)
 
+    st.header(t(lang, "final_title"))
+    
+    metric_labels = t(lang, "final_metrics")
     col1, col2 = st.columns(2)
 
     with col1:
-        st.metric("🌙 Sleep Quality (3–15)", scores["sleep_quality"])
-        st.metric("🙂 WHO-5 Well-being (0–100)", scores["WHO_total"])
-        st.metric("⚠️ Mental Distress (6–30)", scores["distress_total"])
+        st.metric(metric_labels["sleep_quality"], scores["sleep_quality"])
+        st.metric(metric_labels["WHO_total"], f"{scores['WHO_total']}%")
+        st.metric(metric_labels["distress_total"], scores["distress_total"])
 
     with col2:
-        st.metric("🧠 Cognitive Efficiency (8–40)", scores["cognitive_efficiency"])
-        st.metric("🔥 Lifestyle Risk (higher = worse)", scores["lifestyle_risk"])
+        st.metric(metric_labels["cognitive_efficiency"], scores["cognitive_efficiency"])
+        st.metric(metric_labels["lifestyle_risk"], scores["lifestyle_risk"])
     
     st.balloons()
     
     # Save Data
-    save_data = {"timestamp": datetime.now().isoformat(), "lang": lang, **st.session_state.responses, **scores}
+    save_data = {
+        "timestamp": datetime.now().strftime("%Y-%m-%d %H:%M:%S"), 
+        "lang": lang, 
+        **st.session_state.responses, 
+        **scores
+    }
+    
     if append_to_google_sheet(save_data):
-        st.success("✅ Your response has been saved successfully.")
+        st.success(t(lang, "saved"))
 
 # --- Navigation Logic ---
 if st.session_state.page == 1:
@@ -116,14 +124,15 @@ if st.session_state.page == 1:
 elif st.session_state.page == 2:
     render_section("A", ["A1", "A2", "A3", "A4", "A5", "A6", "A7"], 3)
 elif st.session_state.page == 3:
-    render_section("B", ["B1", "B2", "B3", "B4", "B5", "B6", "B7","B8", "B9", "B10", "B11", "B12", "B13", "B14"], 4)
+    # This now correctly lists all questions including the new ones
+    render_section("B", [f"B{i}" for i in range(1, 15)], 4)
 elif st.session_state.page == 4:
     render_section_c()
 elif st.session_state.page == 5:
-    render_section("D", ["D1","D2","D3","D4","D5","D6","D7","D8","D9"], 6) # Example jump to final
+    render_section("D", [f"D{i}" for i in range(1, 10)], 6)
 elif st.session_state.page == 6:
     render_section("E", ["E1","E2","E3","E4"], 7)
 elif st.session_state.page == 7:
-    render_section("F", ["F1","F2","F3","F4","F5","F6"], 8) # Example jump to final
+    render_section("F", ["F1","F2","F3","F4","F5","F6"], 8)
 elif st.session_state.page == 8:
     show_final()
