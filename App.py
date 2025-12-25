@@ -130,8 +130,41 @@ if st.session_state.page == 1:
 elif st.session_state.page == 2:
     render_section("A", ["A1", "A2", "A3", "A4", "A5", "A6", "A7"], 3)
 elif st.session_state.page == 3:
-    # This now correctly lists all questions including the new ones
-    render_section("B", [f"B{i}" for i in range(1, 15)], 4)
+    lang = st.session_state.locked_lang
+    st.header(t(lang, "sections.B"))
+
+    # Clear previous B12–B14 responses to avoid stale state
+    for q in ["B12", "B13", "B14", "B14_details"]:
+        if q in st.session_state.responses:
+            del st.session_state.responses[q]
+
+    # --- Render B1–B11 ---
+    for q in [f"B{i}" for i in range(1, 12)]:
+        data = t_question(lang, q)
+        choice = st.radio(data["q"], data["opts"], key=f"ans_{q}")
+        st.session_state.responses[q] = choice
+
+    st.divider()
+
+    # --- Render B12–B14 ---
+    for q in ["B12", "B13", "B14"]:
+        data = t_question(lang, q)
+        choice = st.radio(data["q"], data["opts"], key=f"ans_{q}_extra")
+        st.session_state.responses[q] = choice
+
+        # Special logic for B14 text box
+        if q == "B14" and choice in ["Yes", "हाँ", "होय"]:
+            st.session_state.responses["B14_details"] = st.text_input(
+                "Please specify / कृपया स्पष्ट करें / कृपया स्पष्ट करा:",
+                key="input_B14_details"
+            )
+
+    # --- Navigation ---
+    col1, col2 = st.columns(2)
+    with col1:
+        if st.button(t(lang, "back", "Back")): prev_page(); st.rerun()
+    with col2:
+        if st.button(t(lang, "next", "Next")): st.session_state.page = 4; st.rerun()
 elif st.session_state.page == 4:
     render_section_c()
 elif st.session_state.page == 5:
