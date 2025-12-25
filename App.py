@@ -82,9 +82,6 @@ def show_final():
     lang = st.session_state.locked_lang
     scores = compute_scores(st.session_state.responses, lang)
 
-    st.success(tq("final_thanks"))
-    st.subheader(tq("final_scores"))
-
     col1, col2 = st.columns(2)
 
     with col1:
