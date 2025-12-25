@@ -49,6 +49,35 @@ def render_section(section_id, q_list, next_p):
     with col2:
         if st.button("Next"): st.session_state.page = next_p; st.rerun()
 
+from utils import t, t_question, append_to_google_sheet # Update imports
+
+def render_section_c():
+    lang = st.session_state.locked_lang
+    st.header(t(lang, "sections.C"))
+    
+    # --- Sub-section 1: WHO-5 ---
+    st.subheader(t(lang, "sections.C_sub_who"))
+    for q in ["C1", "C2", "C3", "C4", "C5"]:
+        data = t_question(lang, q)
+        st.radio(data["q"], data["opts"], key=f"ans_{q}")
+        st.session_state.responses[q] = st.session_state.get(f"ans_{q}")
+
+    st.divider()
+
+    # --- Sub-section 2: DASS ---
+    st.subheader(t(lang, "sections.C_sub_dass"))
+    for q in ["C6", "C7", "C8", "C9", "C10", "C11", "C12"]:
+        data = t_question(lang, q)
+        st.radio(data["q"], data["opts"], key=f"ans_{q}")
+        st.session_state.responses[q] = st.session_state.get(f"ans_{q}")
+
+    # Navigation
+    col1, col2 = st.columns(2)
+    with col1:
+        if st.button(t(lang, "back", "Back")): prev_page(); st.rerun()
+    with col2:
+        if st.button(t(lang, "next", "Next")): st.session_state.page = 5; st.rerun()
+
 def show_final():
     lang = st.session_state.locked_lang
     scores = compute_scores(st.session_state.responses, lang)
