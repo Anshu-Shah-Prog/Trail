@@ -54,7 +54,7 @@ def scroll_to_top():
         unsafe_allow_html=True
     )
 
-TOTAL_PAGES = 8  # excluding intro
+TOTAL_PAGES = 7  # excluding intro
 
 def show_progress():
     if st.session_state.page > 1:
