@@ -94,13 +94,11 @@ def show_final():
         st.metric("🔥 Lifestyle Risk (higher = worse)", scores["lifestyle_risk"])
     
     st.balloons()
-    st.header("Results")
-    st.json(scores) # Display metrics here
     
     # Save Data
     save_data = {"timestamp": datetime.now().isoformat(), "lang": lang, **st.session_state.responses, **scores}
     if append_to_google_sheet(save_data):
-        st.success("Data Saved!")
+        st.success("✅ Your response has been saved successfully.")
 
 # --- Navigation Logic ---
 if st.session_state.page == 1:
