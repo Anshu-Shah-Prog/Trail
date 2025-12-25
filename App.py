@@ -98,8 +98,9 @@ def show_intro():
 def render_section(section_id, q_list, next_p):
     lang = st.session_state.locked_lang
     show_progress()
-
-    st.header(t(lang, f"sections.{section_id}", f"Section {section_id}"))
+    
+    st.header(t(lang, "title"))
+    st.subheader(t(lang, f"sections.{section_id}", f"Section {section_id}"))
 
     for q in q_list:
         data = t_question(lang, q)
@@ -150,7 +151,7 @@ def render_section(section_id, q_list, next_p):
 def render_section_c():
     lang = st.session_state.locked_lang
     show_progress()
-
+    st.title(t(lang, "title"))
     st.header(t(lang, "sections.C"))
 
     qs = ["C1","C2","C3","C4","C5","C6","C7","C8","C9","C10","C11","C12"]
@@ -210,8 +211,8 @@ def show_final():
     scores = compute_scores(st.session_state.responses)
 
     # Display final scores header
-    st.header(t(lang, "title"))
-    st.subheader(t(lang, "final_scores"))
+    st.title(t(lang, "title"))
+    st.header(t(lang, "final_scores"))
 
     # Columns for metrics
     col1, col2 = st.columns(2)
