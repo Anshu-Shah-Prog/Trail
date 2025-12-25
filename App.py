@@ -517,7 +517,6 @@ import gspread
 from google.oauth2.service_account import Credentials
 
 # --- Google Sheets Setup ---
-GSHEET_FILE = "google_key.json"   # service account key file
 SHEET_NAME = "Database"             # Google Sheet name
 WORKSHEET_NAME = "Sheet1"         # Tab name inside the sheet
 
@@ -530,7 +529,7 @@ def append_to_google_sheet(data_dict):
         ]
 
         creds = Credentials.from_service_account_file(
-            GSHEET_FILE,
+            st.secrets["gcp_service_account"],
             scopes=scopes
         )
         client = gspread.authorize(creds)
