@@ -4,7 +4,14 @@ import pandas as pd
 
 from utils import t, t_question, append_to_google_sheet
 from test_compute_scores import compute_scores
+import uuid
 
+# --- Generate a unique survey ID at the start of the session ---
+if "survey_id" not in st.session_state:
+    st.session_state.survey_id = str(uuid.uuid4())
+    st.session_state.data_saved = False  # Guard to prevent multiple saves
+
+survey_id = st.session_state.survey_id
 
 # --------------------------------------------------
 # Page config
@@ -197,38 +204,40 @@ def render_section_c():
 # --------------------------------------------------
 # Final Page
 # --------------------------------------------------
-def show_final():
-    lang = st.session_state.locked_lang
-    
-    scores = compute_scores(st.session_state.responses)
-    st.success(t(lang, "final_thanks"))
+def show_final(scores, lang):
     st.subheader(t(lang, "final_scores"))
-    
+
     col1, col2 = st.columns(2)
 
-    metrics = TRANSLATIONS["final_metrics"].get(lang, {})
+    metrics = t(lang, "final_metrics")  # Get localized metric names
 
     with col1:
-        st.metric(metrics.get("sleep_quality", "🌙 Sleep Quality (3–15)"), scores["sleep_quality"])
-        st.metric(metrics.get("WHO_total", "🙂 WHO-5 Well-being (0–100)"), scores["WHO_total"])
-        st.metric(metrics.get("distress_total", "⚠️ Mental Distress (6–30)"), scores["distress_total"])
+        st.metric(metrics["sleep_quality"], scores["sleep_quality"])
+        st.metric(metrics["WHO_total"], scores["WHO_total"])
+        st.metric(metrics["distress_total"], scores["distress_total"])
 
     with col2:
-        st.metric(metrics.get("cognitive_efficiency", "🧠 Cognitive Efficiency (8–40)"), scores["cognitive_efficiency"])
-        st.metric(metrics.get("lifestyle_risk", "🔥 Lifestyle Risk (higher = worse)"), scores["lifestyle_risk"])
+        st.metric(metrics["cognitive_efficiency"], scores["cognitive_efficiency"])
+        st.metric(metrics["lifestyle_risk"], scores["lifestyle_risk"])
 
     st.balloons()
+    st.success(t(lang, "final_thanks"))
 
     save_data = {
+        "survey_id": survey_id,  # Include unique survey ID
         "timestamp": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
         "lang": lang,
         **st.session_state.responses,
         **scores
     }
 
-    if append_to_google_sheet(save_data):
-        st.success(t(lang, "saved"))
-        st.write(t(lang, "done_message"))
+    # Save only once per session
+    if not st.session_state.data_saved:
+        if append_to_google_sheet(save_data):
+            st.success(t(lang, "final_saved"))
+            st.session_state.data_saved = True
+        else:
+            st.error("Failed to save data.")
 
 # --------------------------------------------------
 # Navigation Controller
