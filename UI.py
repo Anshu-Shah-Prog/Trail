@@ -23,6 +23,7 @@ def render_mcq_card(q_text, options, key=None, card_color="#f0f4f8"):
     # Render the options below inside the same card visually
     choice = st.radio(
         label="",
+        index=None,
         options=options,
         key=key
     )
