@@ -10,8 +10,14 @@ import uuid
 st.markdown(
     """
     <style>
+    /* Ensure all text within markdown and radio labels adapts to theme */
     .stApp {
-        background-color: #f7f9fc;
+        background-color: var(--background-color);
+    }
+    
+    /* This targets the radio button text specifically */
+    div[data-testid="stWidgetLabel"] p {
+        color: var(--text-color) !important;
     }
     </style>
     """,
