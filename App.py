@@ -10,14 +10,39 @@ import uuid
 st.markdown(
     """
     <style>
-    /* Ensure all text within markdown and radio labels adapts to theme */
+    /* 1. Global Background Enhancement */
     .stApp {
-        background-color: var(--background-color);
+        background: linear-gradient(
+            to bottom right, 
+            var(--background-color), 
+            var(--secondary-background-color)
+        );
     }
-    
-    /* This targets the radio button text specifically */
+
+    /* 2. Fix Radio Button Text Visibility */
+    /* This ensures that even if Streamlit defaults change, 
+       your radio options remain tied to the theme text color */
     div[data-testid="stWidgetLabel"] p {
         color: var(--text-color) !important;
+    }
+    
+    div[data-testid="stMarkdownContainer"] p {
+        color: var(--text-color);
+    }
+
+    /* 3. Smooth Spacing */
+    /* Prevents the 'overlapping' you saw earlier by 
+       standardizing the gap between the card and the options */
+    [data-testid="stVerticalBlock"] > div:has(div.stRadio) {
+        margin-top: -25px;
+        padding-left: 20px;
+        padding-bottom: 20px;
+    }
+
+    /* 4. Title Enhancement */
+    h1, h2, h3 {
+        color: var(--text-color);
+        font-family: 'Inter', sans-serif;
     }
     </style>
     """,
