@@ -228,7 +228,7 @@ def show_final():
 
     if append_to_google_sheet(save_data):
         st.success(t(lang, "saved"))
-        st.info(t(lang,"done_message"))
+        st.write(t(lang, "done_message"))
 
 # --------------------------------------------------
 # Navigation Controller
