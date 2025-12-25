@@ -14,17 +14,17 @@ if "locked_lang" not in st.session_state: st.session_state.locked_lang = None
 def next_page(): st.session_state.page += 1
 def prev_page(): st.session_state.page -= 1
 
+# --- Unified Section Renderer ---
 def render_section(section_id, q_list, next_p):
     lang = st.session_state.locked_lang
     st.header(t(lang, f"sections.{section_id}", f"Section {section_id}"))
     
-    # Render all questions
     for q in q_list:
         data = t_question(lang, q)
         q_text = data.get("q", f"Question {q}")
         opts = data.get("opts", [])
-
-        # No option selected by default
+        
+        # index=None makes it so NO option is selected by default
         choice = st.radio(q_text, opts, index=None, key=f"ans_{q}")
         st.session_state.responses[q] = choice
 
@@ -35,22 +35,22 @@ def render_section(section_id, q_list, next_p):
                 key="input_B14_details"
             )
 
-    # Check unanswered questions
+    # CHECK: Are all questions in this section answered?
     unanswered = [q for q in q_list if st.session_state.responses.get(q) is None]
-
+    
     col1, col2 = st.columns(2)
-    with col1:
+    with col1: 
         if st.button(t(lang, "back", "Back"), key=f"back_{section_id}"): 
             prev_page()
             st.rerun()
     with col2:
-        # Only **one Next button** here
-        if st.button(t(lang, "next", "Next"), key=f"next_{section_id}"):
-            if not unanswered:
+        if not unanswered:
+            # Added a unique key here to prevent the DuplicateElementId error
+            if st.button(t(lang, "next", "Next"), key=f"next_{section_id}"): 
                 st.session_state.page = next_p
                 st.rerun()
-            else:
-                st.warning("Please answer all questions to proceed.")
+        else:
+            st.warning("Please answer all questions to proceed.")
 
 # --- Custom Renderer for Section C (Because of subheaders) ---
 def render_section_c():
