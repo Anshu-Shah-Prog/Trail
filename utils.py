@@ -60,7 +60,7 @@ def t_question(lang_code, q_id):
     return {"q": f"Question {q_id} missing", "opts": ["Error: Options not found"]}
     
 def append_to_google_sheet(data_dict, sheet_name="Database"):
-try:
+    try:
         scopes = [
             "https://www.googleapis.com/auth/spreadsheets",
             "https://www.googleapis.com/auth/drive"
