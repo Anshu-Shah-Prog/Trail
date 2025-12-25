@@ -529,7 +529,7 @@ def append_to_google_sheet(data_dict):
         ]
 
         creds = Credentials.from_service_account_info(
-            dict(st.secrets["gcp_service_account"]),
+            st.secrets["gcp_service_account"],
             scopes=scopes
         )
         client = gspread.authorize(creds)
