@@ -161,7 +161,7 @@ def render_section(section_id, q_list, next_p):
 # Section C (Custom layout)
 # --------------------------------------------------
 def render_section_c():
-    lang = st.session_state.locked_lang
+lang = st.session_state.locked_lang
     st.title(t(lang, "title"))
 
     show_progress()
@@ -172,14 +172,18 @@ def render_section_c():
 
     st.subheader(t(lang, "sections.C_sub_who"))
     for q in qs[:5]:
-        data = t_question(lang, q)
+        data = t_question(lang, q) # ADD THIS LINE
+        q_text = data.get("q", f"Question {q}") # ADD THIS LINE
+        opts = data.get("opts", []) # ADD THIS LINE
         st.session_state.responses[q] = render_mcq_card(q_text, opts, key=f"ans_{q}", card_color="#e8f4f8")
 
     st.divider()
 
     st.subheader(t(lang, "sections.C_sub_dass"))
     for q in qs[5:]:
-        data = t_question(lang, q)
+        data = t_question(lang, q) # ADD THIS LINE
+        q_text = data.get("q", f"Question {q}") # ADD THIS LINE
+        opts = data.get("opts", []) # ADD THIS LINE
         st.session_state.responses[q] = render_mcq_card(q_text, opts, key=f"ans_{q}", card_color="#e8f4f8")
 
     unanswered = [
