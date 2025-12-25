@@ -2,36 +2,45 @@ import streamlit as st
 
 def render_mcq_card(q_text, options, key=None, card_color=None):
     """
-    Enhanced MCQ card that uses theme-aware variables for perfect contrast.
+    Renders a clean MCQ card that adapts to Light/Dark modes without overlapping.
     """
-    # Using 'secondary-background' provides a card-like feel that 
-    # automatically flips from light gray to dark gray based on the theme.
-    st.markdown(
-        f"""
-        <div style="
-            background-color: var(--secondary-background-color);
-            padding: 24px;
-            border-radius: 15px;
-            border: 1px solid rgba(128, 128, 128, 0.1);
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-            margin-bottom: 30px;
-        ">
+    # Use a container to group the question and radio buttons together
+    with st.container():
+        # Styled Question Header
+        st.markdown(
+            f"""
             <div style="
+                background-color: var(--secondary-background-color);
+                padding: 16px 20px;
+                border-radius: 12px 12px 0px 0px;
+                border: 1px solid rgba(128, 128, 128, 0.2);
+                border-bottom: none;
                 color: var(--text-color);
-                font-size: 1.1rem;
                 font-weight: 600;
-                line-height: 1.5;
+                font-size: 1.05rem;
             ">
                 {q_text}
             </div>
-        </div>
-        """,
-        unsafe_allow_html=True
-    )
-
-    # We use a container to slightly pull the radio buttons up 
-    # so they appear inside/near the card without overlapping text.
-    with st.container():
+            """,
+            unsafe_allow_html=True
+        )
+        
+        # Radio buttons inside a matching styled box
+        # We use a nested div via markdown to create the bottom half of the card
+        st.markdown(
+            """
+            <div style="
+                background-color: transparent;
+                padding: 10px 20px;
+                border-radius: 0px 0px 12px 12px;
+                border: 1px solid rgba(128, 128, 128, 0.2);
+                border-top: none;
+                margin-bottom: 20px;
+            ">
+            """, 
+            unsafe_allow_html=True
+        )
+        
         choice = st.radio(
             label=q_text,
             options=options,
@@ -39,4 +48,7 @@ def render_mcq_card(q_text, options, key=None, card_color=None):
             key=key,
             label_visibility="collapsed"
         )
+        
+        st.markdown("</div>", unsafe_allow_html=True)
+        
     return choice
