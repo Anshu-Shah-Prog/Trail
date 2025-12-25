@@ -528,7 +528,7 @@ def append_to_google_sheet(data_dict):
             "https://www.googleapis.com/auth/drive"
         ]
 
-        creds = Credentials.from_service_account_file(
+        creds = Credentials.from_service_account_info(
             dict(st.secrets["gcp_service_account"]),
             scopes=scopes
         )
