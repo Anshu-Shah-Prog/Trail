@@ -66,8 +66,8 @@ def append_to_google_sheet(data_dict, sheet_name="Database"):
             "https://www.googleapis.com/auth/drive"
         ]
 
-        creds = Credentials.from_service_account_file(
-            GSHEET_FILE,
+        creds = Credentials.from_service_account_info(
+            creds_info,
             scopes=scopes
         )
         client = gspread.authorize(creds)
