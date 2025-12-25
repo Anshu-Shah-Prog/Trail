@@ -21,11 +21,16 @@ def load_translations():
 TRANSLATIONS = load_translations()
 
 def t(lang_code, key, default=None):
-    """Core translation lookup logic"""
-    # Safety check if JSON failed to load
+    """Translation lookup that works for nested questions or top-level keys."""
     if not TRANSLATIONS:
         return default or key
-        
+
+    # 1. First, check if key exists as top-level
+    top_val = TRANSLATIONS.get(key)
+    if isinstance(top_val, dict) and lang_code in top_val:
+        return top_val[lang_code]
+
+    # 2. Otherwise, check inside lang_code block (like questions)
     lang_block = TRANSLATIONS.get(lang_code, {})
     cur = lang_block
     if key:
@@ -36,9 +41,10 @@ def t(lang_code, key, default=None):
             else:
                 cur = None
                 break
-        if cur is not None: return cur
+        if cur is not None:
+            return cur
 
-    return default
+    return default or key
 
 def t_question(lang_code, q_id):
     """Specific helper to get question data safely"""
