@@ -213,42 +213,39 @@ def show_final():
     lang = st.session_state.locked_lang
     scores = compute_scores(st.session_state.responses)
 
-    # Display header
-    st.title(t(lang, "title"))
-    st.header(t(lang, "final_scores"))
+    st.success(t(lang, "final_thanks"))
+    st.subheader(t(lang, "final_scores"))
 
-    # Columns for metrics
+    # Display metrics using your translation
+    metrics = TRANSLATIONS["final_metrics"].get(lang, {})
     col1, col2 = st.columns(2)
-    metrics = t(lang, "final_metrics")
-
     with col1:
-        st.metric(metrics["sleep_quality"], scores["sleep_quality"])
-        st.metric(metrics["WHO_total"], scores["WHO_total"])
-        st.metric(metrics["distress_total"], scores["distress_total"])
-
+        st.metric(metrics.get("sleep_quality", "🌙 Sleep Quality (3–15)"), scores["sleep_quality"])
+        st.metric(metrics.get("WHO_total", "🙂 WHO-5 Well-being (0–100)"), scores["WHO_total"])
+        st.metric(metrics.get("distress_total", "⚠️ Mental Distress (6–30)"), scores["distress_total"])
     with col2:
-        st.metric(metrics["cognitive_efficiency"], scores["cognitive_efficiency"])
-        st.metric(metrics["lifestyle_risk"], scores["lifestyle_risk"])
+        st.metric(metrics.get("cognitive_efficiency", "🧠 Cognitive Efficiency (8–40)"), scores["cognitive_efficiency"])
+        st.metric(metrics.get("lifestyle_risk", "🔥 Lifestyle Risk (higher = worse)"), scores["lifestyle_risk"])
 
     st.balloons()
-    st.success(t(lang, "final_thanks"))
 
-    # --- Prepare data to save ---
-    save_data = {
-        "timestamp": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
-        "lang": lang,
-        **st.session_state.responses,
-        **scores
-    }
+    # Initialize flag if it doesn't exist
+    if "data_saved" not in st.session_state:
+        st.session_state.data_saved = False
 
-    # --- Save only once per session ---
-    if "data_saved" not in st.session_state or not st.session_state.data_saved:
-        success = append_to_google_sheet(save_data)
-        if success:
-            st.session_state.data_saved = True
+    # Save data only once
+    if not st.session_state.data_saved:
+        save_data = {
+            "timestamp": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+            "lang": lang,
+            **st.session_state.responses,
+            **scores
+        }
+
+        if append_to_google_sheet(save_data):
             st.success(t(lang, "final_saved"))
-        else:
-            st.error("Failed to save data.")
+            st.session_state.data_saved = True  # prevent duplicate saves
+
             
 # --------------------------------------------------
 # Navigation Controller
