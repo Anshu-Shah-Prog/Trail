@@ -34,7 +34,7 @@ st.markdown(
     /* Prevents the 'overlapping' you saw earlier by 
        standardizing the gap between the card and the options */
     [data-testid="stVerticalBlock"] > div:has(div.stRadio) {
-        margin-top: -25px;
+        margin-top: 10px;
         padding-left: 20px;
         padding-bottom: 20px;
     }
