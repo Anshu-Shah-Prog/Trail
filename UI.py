@@ -14,7 +14,7 @@ def render_mcq_card(q_text, options, key=None, card_color=None):
             border-radius: 15px;
             border: 1px solid rgba(128, 128, 128, 0.1);
             box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-            margin-bottom: 10px;
+            margin-bottom: 12px;
         ">
             <div style="
                 color: var(--text-color);
