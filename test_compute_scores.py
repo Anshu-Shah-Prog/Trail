@@ -18,7 +18,7 @@ TRANSLATIONS = load_translations_internal()
 
 def score_numeric(qkey, option_text, lang='en'):
     if option_text is None:
-        return None
+        return 0
     
     s = str(option_text).strip()
     
