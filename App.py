@@ -38,16 +38,26 @@ def render_section(section_id, q_list, next_p):
     st.header(t(lang, f"sections.{section_id}", f"Section {section_id}"))
     
     for q in q_list:
-        q_text = t(lang, f"Q.{q}.q", f"Question {q}")
-        opts = t(lang, f"Q.{q}.opts", [])
-        st.radio(q_text, opts, key=f"ans_{q}")
-        st.session_state.responses[q] = st.session_state.get(f"ans_{q}")
+        data = t_question(lang, q)
+        q_text = data.get("q", f"Question {q}")
+        opts = data.get("opts", [])
+        
+        # Display the question
+        choice = st.radio(q_text, opts, key=f"ans_{q}")
+        st.session_state.responses[q] = choice
+
+        # Special logic for B14 text box
+        if q == "B14" and choice in ["Yes", "हाँ", "होय"]:
+            st.session_state.responses["B14_details"] = st.text_input(
+                "Please specify / कृपया स्पष्ट करें:", 
+                key="input_B14_details"
+            )
 
     col1, col2 = st.columns(2)
     with col1: 
-        if st.button("Back"): prev_page(); st.rerun()
+        if st.button(t(lang, "back", "Back")): prev_page(); st.rerun()
     with col2:
-        if st.button("Next"): st.session_state.page = next_p; st.rerun()
+        if st.button(t(lang, "next", "Next")): st.session_state.page = next_p; st.rerun()
 
 from utils import t, t_question, append_to_google_sheet # Update imports
 
