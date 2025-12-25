@@ -97,9 +97,11 @@ def show_intro():
 # --------------------------------------------------
 def render_section(section_id, q_list, next_p):
     lang = st.session_state.locked_lang
-    show_progress()
     
     st.header(t(lang, "title"))
+
+    show_progress()
+    
     st.subheader(t(lang, f"sections.{section_id}", f"Section {section_id}"))
 
     for q in q_list:
@@ -150,8 +152,10 @@ def render_section(section_id, q_list, next_p):
 # --------------------------------------------------
 def render_section_c():
     lang = st.session_state.locked_lang
-    show_progress()
     st.title(t(lang, "title"))
+
+    show_progress()
+    
     st.header(t(lang, "sections.C"))
 
     qs = ["C1","C2","C3","C4","C5","C6","C7","C8","C9","C10","C11","C12"]
