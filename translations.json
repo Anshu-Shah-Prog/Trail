@@ -40,6 +40,7 @@
       "B9": {"q":"B9. When do you feel most energetic?","opts":["Morning","Afternoon","Evening","Night"]},
       "B10": {"q":"B10. How consistent is your sleep schedule across the week?","opts":["Very consistent","Consistent","Neutral","Inconsistent","Very inconsistent"]},
       "B11": {"q":"B11. Animal chronotype","opts":["Lion","Bear","Wolf","Dolphin"]},
+      "B12": {"q":"B11. Animal chronotype","opts":["Lion","Bear","Wolf","Dolphin"]},
       "C1": {"q":"C1. I felt cheerful and in good spirits.","opts":["1","2","3","4","5"]},
       "C2": {"q":"C2. I felt calm and relaxed.","opts":["1","2","3","4","5"]},
       "C3": {"q":"C3. I felt active and energetic.","opts":["1","2","3","4","5"]},
