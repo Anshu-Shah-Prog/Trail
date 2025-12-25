@@ -66,13 +66,15 @@ def append_to_google_sheet(data_dict, sheet_name="Database"):
             "https://www.googleapis.com/auth/drive"
         ]
         creds_info = st.secrets["gcp_service_account"]
-        creds = Credentials.from_service_account_info(
-            creds_info,
-            scopes=scopes
-        )
+        creds = Credentials.from_service_account_info(creds_info, scopes=scopes)
         client = gspread.authorize(creds)
 
-        sheet = client.open(sheet_name).worksheet("Responses")
+        # Open sheet, create worksheet if missing
+        try:
+            sheet = client.open(sheet_name).worksheet("Responses")
+        except gspread.exceptions.WorksheetNotFound:
+            sh = client.open(sheet_name)
+            sheet = sh.add_worksheet(title="Responses", rows=1000, cols=20)
 
         # Add headers if sheet is empty
         if not sheet.get_all_values():
@@ -80,6 +82,7 @@ def append_to_google_sheet(data_dict, sheet_name="Database"):
 
         # Append data
         sheet.append_row(list(data_dict.values()))
+        st.success("Data appended to Google Sheets!")
         return True
 
     except Exception as e:
