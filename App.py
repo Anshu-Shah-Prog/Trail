@@ -2,7 +2,7 @@ import streamlit as st
 from datetime import datetime
 import pandas as pd
 
-from utils import t, t_question, append_to_google_sheet, TRANSLATIONS
+from utils import t, t_question, append_to_google_sheet, TRANSLATIONS, map_to_english
 from test_compute_scores import compute_scores
 import uuid
 
@@ -235,13 +235,18 @@ def show_final():
 
     st.balloons()
 
+    # Convert all responses to English before saving
+    english_responses = {}
+    for q, ans in st.session_state.responses.items():
+        english_responses[q] = map_to_english(q, ans, st.session_state.locked_lang)
+
     # Save data only once per session
     if not st.session_state.get("data_saved", False):
         save_data = {
             "survey_id": st.session_state.survey_id,
             "timestamp": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
-            "lang": lang,
-            **st.session_state.responses,
+            "lang": "en",
+            **english_responses,
             **scores
         }
 
