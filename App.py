@@ -209,13 +209,13 @@ def show_final():
     col1, col2 = st.columns(2)
 
     with col1:
-        st.metric(metric_labels["sleep_quality"], scores["sleep_quality"])
-        st.metric(metric_labels["WHO_total"], f"{scores['WHO_total']}%")
-        st.metric(metric_labels["distress_total"], scores["distress_total"])
+        st.metric("🌙 Sleep Quality (3–15)", scores["sleep_quality"])
+        st.metric("🙂 WHO-5 Well-being (0–100)", scores["WHO_total"])
+        st.metric("⚠️ Mental Distress (6–30)", scores["distress_total"])
 
     with col2:
-        st.metric(metric_labels["cognitive_efficiency"], scores["cognitive_efficiency"])
-        st.metric(metric_labels["lifestyle_risk"], scores["lifestyle_risk"])
+        st.metric("🧠 Cognitive Efficiency (8–40)", scores["cognitive_efficiency"])
+        st.metric("🔥 Lifestyle Risk (higher = worse)", scores["lifestyle_risk"])
 
     st.balloons()
 
