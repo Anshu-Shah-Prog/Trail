@@ -91,6 +91,7 @@ def show_intro():
 def render_section(section_id, q_list, next_p):
     lang = st.session_state.locked_lang
     show_progress()
+
     st.header(t(lang, f"sections.{section_id}", f"Section {section_id}"))
 
     for q in q_list:
@@ -106,26 +107,35 @@ def render_section(section_id, q_list, next_p):
         )
         st.session_state.responses[q] = choice
 
-        # Special logic for B14
         if q == "B14" and choice in ["Yes", "हाँ", "होय"]:
             st.session_state.responses["B14_details"] = st.text_input(
                 "Please specify / कृपया स्पष्ट करें / कृपया स्पष्ट करा:",
                 key="input_B14_details"
             )
 
+    unanswered = [
+        q for q in q_list
+        if st.session_state.responses.get(q) is None
+    ]
+
     col1, col2 = st.columns(2)
 
     with col1:
         if st.button(t(lang, "back", "Back")):
             prev_page()
-            st.rerun()
-
-    with col2:
-        if st.button(t(lang, "next", "Next")):
-            st.session_state.page = next_p
             scroll_to_top()
             st.rerun()
 
+    with col2:
+        if st.button(
+            t(lang, "next", "Next"),
+            disabled=bool(unanswered)
+        ):
+            st.session_state.page = next_p
+            scroll_to_top()
+            st.rerun()
+    if unanswered:
+        st.info("Please answer all questions to continue.")
 
 # --------------------------------------------------
 # Section C (Custom layout)
@@ -133,37 +143,56 @@ def render_section(section_id, q_list, next_p):
 def render_section_c():
     lang = st.session_state.locked_lang
     show_progress()
+
     st.header(t(lang, "sections.C"))
 
-    # WHO-5
+    qs = ["C1","C2","C3","C4","C5","C6","C7","C8","C9","C10","C11","C12"]
+
     st.subheader(t(lang, "sections.C_sub_who"))
-    for q in ["C1", "C2", "C3", "C4", "C5"]:
+    for q in qs[:5]:
         data = t_question(lang, q)
-        choice = st.radio(data["q"], data["opts"], index=None, key=f"ans_{q}")
-        st.session_state.responses[q] = choice
+        st.session_state.responses[q] = st.radio(
+            data["q"],
+            data["opts"],
+            index=None,
+            key=f"ans_{q}"
+        )
 
     st.divider()
 
-    # DASS
     st.subheader(t(lang, "sections.C_sub_dass"))
-    for q in ["C6", "C7", "C8", "C9", "C10", "C11", "C12"]:
+    for q in qs[5:]:
         data = t_question(lang, q)
-        choice = st.radio(data["q"], data["opts"], index=None, key=f"ans_{q}")
-        st.session_state.responses[q] = choice
+        st.session_state.responses[q] = st.radio(
+            data["q"],
+            data["opts"],
+            index=None,
+            key=f"ans_{q}"
+        )
+
+    unanswered = [
+        q for q in qs
+        if st.session_state.responses.get(q) is None
+    ]
 
     col1, col2 = st.columns(2)
 
     with col1:
         if st.button(t(lang, "back", "Back")):
             prev_page()
-            st.rerun()
-
-    with col2:
-        if st.button(t(lang, "next", "Next")):
-            st.session_state.page = 5
             scroll_to_top()
             st.rerun()
 
+    with col2:
+        if st.button(
+            t(lang, "next", "Next"),
+            disabled=bool(unanswered)
+        ):
+            st.session_state.page = 5
+            scroll_to_top()
+            st.rerun()
+    if unanswered:
+        st.info("Please answer all questions to continue.")
 
 # --------------------------------------------------
 # Final Page
