@@ -13,6 +13,14 @@ def load_translations():
 
 TRANSLATIONS = load_translations()
 
+def t_question(lang_code, q_id):
+    """Specific helper to get question text and options dictionary"""
+    # Navigates to TRANSLATIONS[lang][Q][q_id]
+    q_data = t(lang_code, f"Q.{q_id}")
+    if q_data and isinstance(q_data, dict):
+        return q_data
+    return {"q": f"Missing Question {q_id}", "opts": []}
+
 def t(lang_code, key, default=None):
     """Core translation lookup logic"""
     lang_block = TRANSLATIONS.get(lang_code, {})
