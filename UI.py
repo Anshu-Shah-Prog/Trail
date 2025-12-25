@@ -1,13 +1,11 @@
 import streamlit as st
 
-def render_mcq_card(q_text, options, key=None, card_color="#f0f4f8"):
+def render_mcq_card(q_text, options, key=None, card_color=None):
     """
-    Render a single MCQ inside a styled card that works in Light and Dark mode.
+    Render a single MCQ inside a styled card that adapts to light/dark themes.
     """
-    # Use CSS variables: 
-    # var(--text-color) ensures text is dark in light mode and white in dark mode.
-    # var(--secondary-background-color) provides a subtle contrast in both modes.
-    
+    # Using CSS variables ensures the card background and text color
+    # adjust automatically to the user's system theme.
     st.markdown(
         f"""
         <div style="
@@ -15,22 +13,22 @@ def render_mcq_card(q_text, options, key=None, card_color="#f0f4f8"):
             padding: 20px;
             border-radius: 10px;
             border: 1px solid rgba(128, 128, 128, 0.2);
-            box-shadow: 2px 2px 10px rgba(0,0,0,0.05);
-            margin-bottom: 10px;
+            margin-bottom: -40px; 
             color: var(--text-color);
         ">
-        <strong style="font-size: 1.1rem;">{q_text}</strong>
+            <strong style="font-size: 1.1rem;">{q_text}</strong>
         </div>
         """,
         unsafe_allow_html=True
     )
-    
-    # Render the radio options
+
+    # Render radio options. We use label_visibility="collapsed" 
+    # because the question text is already displayed in the HTML card above.
     choice = st.radio(
-        label=f"Select an option for: {q_text}", # Added label for accessibility, but hidden via CSS if needed
+        label=q_text,
         options=options,
         index=None,
         key=key,
-        label_visibility="collapsed" # Hides the redundant label
+        label_visibility="collapsed"
     )
     return choice
