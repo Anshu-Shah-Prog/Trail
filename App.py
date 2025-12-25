@@ -106,7 +106,6 @@ if st.session_state.page == 1:
 elif st.session_state.page == 2:
     render_section("A", ["A1", "A2", "A3", "A4", "A5", "A6", "A7"], 3)
 elif st.session_state.page == 3:
-    elif st.session_state.page == 3:
     lang = st.session_state.locked_lang
     st.header(t(lang, "sections.B"))
     
