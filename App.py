@@ -15,11 +15,12 @@ st.markdown("""
 
 /* ===== Question Card ===== */
 .card {
-    background: white;
-    padding: 20px;
+    background-color: #ffffff;
+    padding: 24px;
     border-radius: 16px;
-    box-shadow: 0 10px 25px rgba(0,0,0,0.08);
-    margin-bottom: 20px;
+    border: 1.5px solid #e2e8f0; /* Soft grey border */
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    margin-bottom: 25px;
 }
 
 /* ===== Likert Group Card ===== */
@@ -42,9 +43,11 @@ st.markdown("""
 /* ===== Buttons ===== */
 div.stButton > button {
     width: 100%;
+    border: 1px solid #cbd5e1;
     border-radius: 10px;
     font-size: 16px;
     font-weight: 600;
+    transition: all 0.2s;
 }
 
 /* ===== Selected Likert Button ===== */
@@ -62,7 +65,7 @@ button[kind="primary"] {
 /* ===== Enabled Next Button ===== */
 .next-enabled button {
     background-color: #22c55e !important;
-    color: white !important;
+    color: Green !important;
 }
 </style>
 """, unsafe_allow_html=True)
@@ -97,15 +100,20 @@ st.markdown("""
 
 /* QUESTION CARD */
 .q-card {
-    background: #ffffff;
-    padding: 18px;
-    border-radius: 14px;
-    margin-bottom: 16px;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+    background-color: #ffffff;
+    padding: 24px;
+    border-radius: 16px;
+    border: 1.5px solid #e2e8f0; /* Soft grey border */
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    margin-bottom: 25px;
 }
+
 .q-title {
-    font-weight: 600;
-    margin-bottom: 10px;
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: #1e293b;
+    margin-bottom: 15px;
+    display: block;
 }
 
 /* BUTTONS (mobile friendly) */
@@ -302,20 +310,23 @@ def mcq_buttons(q, question, options):
     if q not in st.session_state.responses:
         st.session_state.responses[q] = None
 
-    st.markdown(f"""
-    <div class="q-card">
-      <div class="q-title">{question}</div>
-    """, unsafe_allow_html=True)
+    # This opens the single container for both question and options
+    st.markdown(f'<div class="q-container"><span class="q-title">{question}</span>', unsafe_allow_html=True)
 
+    # Use Streamlit columns for the buttons
     cols = st.columns(len(options))
     for i, opt in enumerate(options):
         selected = st.session_state.responses[q] == opt
+        
+        # Style logic: uses 'primary' type for the selected button
+        btn_type = "primary" if selected else "secondary"
         label = f"✅ {opt}" if selected else opt
 
-        if cols[i].button(label, key=f"{q}_{i}"):
+        if cols[i].button(label, key=f"{q}_{i}", type=btn_type):
             st.session_state.responses[q] = opt
             st.rerun()
 
+    # This closes the q-container div
     st.markdown("</div>", unsafe_allow_html=True)
 
 # ---------------------------------------------------------
@@ -452,9 +463,7 @@ if st.session_state.page == 2:
     for q in required:
         qtext = t(lang, f"Q.{q}.q", f"[MISSING QUESTION {q}]")
         opts = t(lang, f"Q.{q}.opts", [])
-        st.markdown("<div class='card'>", unsafe_allow_html=True)
         mcq_buttons(q, qtext, opts)
-        st.markdown("</div>", unsafe_allow_html=True)
 
 
     # Navigation buttons
@@ -486,9 +495,7 @@ if st.session_state.page == 3:
     for q in required:
         qtext = t(lang, f"Q.{q}.q", f"[MISSING QUESTION {q}]")
         opts = t(lang, f"Q.{q}.opts", [])
-        st.markdown("<div class='card'>", unsafe_allow_html=True)
         mcq_buttons(q, qtext, opts)
-        st.markdown("</div>", unsafe_allow_html=True)
 
     col1, col2, col3 = st.columns([1,1,4])
     with col1:
