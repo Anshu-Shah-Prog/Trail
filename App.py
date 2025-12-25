@@ -204,12 +204,19 @@ def render_section_c():
 # --------------------------------------------------
 # Final Page
 # --------------------------------------------------
-def show_final(scores, lang):
+def show_final():
+    # Get language and compute scores
+    lang = st.session_state.locked_lang
+    scores = compute_scores(st.session_state.responses)
+
+    # Display final scores header
     st.subheader(t(lang, "final_scores"))
 
+    # Columns for metrics
     col1, col2 = st.columns(2)
 
-    metrics = t(lang, "final_metrics")  # Get localized metric names
+    # Get translated metric names
+    metrics = t(lang, "final_metrics")
 
     with col1:
         st.metric(metrics["sleep_quality"], scores["sleep_quality"])
@@ -223,8 +230,9 @@ def show_final(scores, lang):
     st.balloons()
     st.success(t(lang, "final_thanks"))
 
+    # Prepare data to save
     save_data = {
-        "survey_id": survey_id,  # Include unique survey ID
+        "survey_id": st.session_state.survey_id,
         "timestamp": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
         "lang": lang,
         **st.session_state.responses,
@@ -238,7 +246,7 @@ def show_final(scores, lang):
             st.session_state.data_saved = True
         else:
             st.error("Failed to save data.")
-
+            
 # --------------------------------------------------
 # Navigation Controller
 # --------------------------------------------------
