@@ -24,9 +24,9 @@ def show_intro():
     st.selectbox("Select Language", options=lang_options, format_func=lambda x: lang_labels[x], key="lang_choice")
 
     if st.button(t(lang, "start", "Start")): st.session_state.locked_lang = st.session_state.lang_choice
-        st.session_state.responses = {}
-        next_page()
-        st.rerun()
+    st.session_state.responses = {}
+    next_page()
+    st.rerun()
 
 
 # --- Unified Section Renderer ---
