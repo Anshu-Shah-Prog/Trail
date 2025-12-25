@@ -3,6 +3,7 @@ from datetime import datetime
 import pandas as pd
 
 from utils import t, t_question, append_to_google_sheet, TRANSLATIONS, map_to_english
+from UI import render_mcq_card
 from test_compute_scores import compute_scores
 import uuid
 
@@ -112,12 +113,7 @@ def render_section(section_id, q_list, next_p):
         q_text = data.get("q", f"Question {q}")
         opts = data.get("opts", [])
 
-        choice = st.radio(
-            q_text,
-            opts,
-            index=None,
-            key=f"ans_{q}"
-        )
+        choice = render_mcq_card(q_text, opts, index=None, key=f"ans_{q}", card_color="#e8f4f8")
         st.session_state.responses[q] = choice
 
         if q == "B14" and choice in ["Yes", "हाँ", "होय"]:
@@ -166,24 +162,14 @@ def render_section_c():
     st.subheader(t(lang, "sections.C_sub_who"))
     for q in qs[:5]:
         data = t_question(lang, q)
-        st.session_state.responses[q] = st.radio(
-            data["q"],
-            data["opts"],
-            index=None,
-            key=f"ans_{q}"
-        )
+        st.session_state.responses[q] = render_mcq_card(q_text, opts, index=None, key=f"ans_{q}", card_color="#e8f4f8")
 
     st.divider()
 
     st.subheader(t(lang, "sections.C_sub_dass"))
     for q in qs[5:]:
         data = t_question(lang, q)
-        st.session_state.responses[q] = st.radio(
-            data["q"],
-            data["opts"],
-            index=None,
-            key=f"ans_{q}"
-        )
+        st.session_state.responses[q] = render_mcq_card(q_text, opts, index=None, key=f"ans_{q}", card_color="#e8f4f8")
 
     unanswered = [
         q for q in qs
