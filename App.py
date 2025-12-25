@@ -200,11 +200,10 @@ def render_section_c():
 def show_final():
     lang = st.session_state.locked_lang
 
-    scores = compute_scores(st.session_state.responses, lang)
+    scores = compute_scores(st.session_state.responses)
 
-    st.header(t(lang, "final_title"))
-
-    metric_labels = t(lang, "final_metrics")
+    st.success(t("final_thanks"))
+    st.subheader(t("final_scores"))
 
     col1, col2 = st.columns(2)
 
@@ -227,7 +226,7 @@ def show_final():
     }
 
     if append_to_google_sheet(save_data):
-        st.success(t(lang, "saved"))
+        st.success(t("saved"))
 
 
 # --------------------------------------------------
