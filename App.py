@@ -37,6 +37,22 @@ def next_page():
 def prev_page():
     st.session_state.page -= 1
 
+def scroll_to_top():
+    st.markdown(
+        """
+        <script>
+            window.scrollTo(0, 0);
+        </script>
+        """,
+        unsafe_allow_html=True
+    )
+
+TOTAL_PAGES = 8  # excluding intro
+
+def show_progress():
+    if st.session_state.page > 1:
+        progress = (st.session_state.page - 1) / TOTAL_PAGES
+        st.progress(min(progress, 1.0))
 
 # --------------------------------------------------
 # Intro Page
@@ -65,6 +81,7 @@ def show_intro():
         st.session_state.locked_lang = st.session_state.lang_choice
         st.session_state.responses = {}
         next_page()
+        scroll_to_top()
         st.rerun()
 
 
@@ -73,7 +90,7 @@ def show_intro():
 # --------------------------------------------------
 def render_section(section_id, q_list, next_p):
     lang = st.session_state.locked_lang
-
+    show_progress()
     st.header(t(lang, f"sections.{section_id}", f"Section {section_id}"))
 
     for q in q_list:
@@ -106,6 +123,7 @@ def render_section(section_id, q_list, next_p):
     with col2:
         if st.button(t(lang, "next", "Next")):
             st.session_state.page = next_p
+            scroll_to_top()
             st.rerun()
 
 
@@ -114,7 +132,7 @@ def render_section(section_id, q_list, next_p):
 # --------------------------------------------------
 def render_section_c():
     lang = st.session_state.locked_lang
-
+    show_progress()
     st.header(t(lang, "sections.C"))
 
     # WHO-5
@@ -143,6 +161,7 @@ def render_section_c():
     with col2:
         if st.button(t(lang, "next", "Next")):
             st.session_state.page = 5
+            scroll_to_top()
             st.rerun()
 
 
