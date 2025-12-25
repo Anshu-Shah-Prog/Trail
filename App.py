@@ -2,7 +2,7 @@ import streamlit as st
 from datetime import datetime
 import pandas as pd
 
-from utils import t, t_question, append_to_google_sheet
+from utils import t, t_question, append_to_google_sheet, TRANSLATIONS
 from test_compute_scores import compute_scores
 import uuid
 
