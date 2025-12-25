@@ -6,131 +6,7 @@ import matplotlib.pyplot as plt
 from datetime import datetime
 import os
 
-st.markdown("""
-<style>
-/* ===== Page background ===== */
-[data-testid="stAppViewContainer"] {
-    background: linear-gradient(135deg, #f0f9ff, #e0f2fe);
-}
-
-/* ===== Question Card ===== */
-.card {
-    background-color: #ffffff;
-    padding: 24px;
-    border-radius: 16px;
-    border: 1.5px solid #e2e8f0; /* Soft grey border */
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-    margin-bottom: 25px;
-}
-
-/* ===== Likert Group Card ===== */
-.likert-card {
-    background: #f8fafc;
-    padding: 20px;
-    border-radius: 16px;
-    border-left: 6px solid #38bdf8;
-    margin-bottom: 25px;
-}
-
-/* ===== Section Header ===== */
-.section-title {
-    font-size: 24px;
-    font-weight: 700;
-    margin-bottom: 10px;
-    color: #0f172a;
-}
-
-/* ===== Buttons ===== */
-div.stButton > button {
-    width: 100%;
-    border: 1px solid #cbd5e1;
-    border-radius: 10px;
-    font-size: 16px;
-    font-weight: 600;
-    transition: all 0.2s;
-}
-
-/* ===== Selected Likert Button ===== */
-button[kind="primary"] {
-    background-color: #22c55e !important;
-    color: white !important;
-}
-
-/* ===== Disabled Next Button ===== */
-.next-disabled button {
-    background-color: #94a3b8 !important;
-    color: white !important;
-}
-
-/* ===== Enabled Next Button ===== */
-.next-enabled button {
-    background-color: #22c55e !important;
-    color: Green !important;
-}
-</style>
-""", unsafe_allow_html=True)
-
 st.set_page_config(page_title="Chronotype & Brain Efficiency", layout="wide")
-
-st.markdown("""
-<style>
-/* HERO */
-.hero {
-    background: linear-gradient(135deg, #f5f7fa, #e4ecf7);
-    padding: 28px;
-    border-radius: 16px;
-    margin-bottom: 20px;
-}
-.hero h1 {
-    font-size: 1.8rem;
-}
-.hero p {
-    font-size: 1rem;
-    color: #444;
-}
-.badge {
-    display: inline-block;
-    background: #e8f5e9;
-    color: #2e7d32;
-    padding: 6px 12px;
-    border-radius: 20px;
-    font-size: 0.85rem;
-    margin-right: 8px;
-}
-
-/* QUESTION CARD */
-.q-card {
-    background-color: #ffffff;
-    padding: 24px;
-    border-radius: 16px;
-    border: 1.5px solid #e2e8f0; /* Soft grey border */
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-    margin-bottom: 25px;
-}
-
-.q-title {
-    font-size: 1.1rem;
-    font-weight: 700;
-    color: #1e293b;
-    margin-bottom: 15px;
-    display: block;
-}
-
-/* BUTTONS (mobile friendly) */
-div.stButton > button {
-    width: 100%;
-    padding: 10px;
-    border-radius: 10px;
-}
-
-/* NEXT BUTTON */
-.next-btn button {
-    background-color: #1976D2;
-    color: white;
-    font-weight: 600;
-}
-</style>
-""", unsafe_allow_html=True)
 
 # -- Load translations.json (must be in same directory) --
 TRANS_PATH = "translations.json"
@@ -212,17 +88,9 @@ def page_intro():
     start_btn_label = t(lang, "start", TRANSLATIONS["en"].get("start", "Start Survey"))
     next_label = t(lang, "next", TRANSLATIONS["en"].get("next", "Next →"))
 
-    st.markdown("""
-    <div class="hero">
-      <h1>🧠 Morning Minds & Night Owls</h1>
-      <p>Please answer honestly. Responses are anonymous.</p>
-      <div>
-        <span class="badge">⏱ 7–10 minutes</span>
-        <span class="badge">🔒 Anonymous</span>
-        <span class="badge">📊 Research-based</span>
-      </div>
-    </div>
-    """, unsafe_allow_html=True)
+    st.title(title)
+    st.write(desc)
+    st.markdown("---")
 
     # Language options shown here on Page 1
     col1, col2 = st.columns([2, 1])
@@ -298,36 +166,8 @@ else:
                 st.rerun()
 
         st.markdown("---")
-        TOTAL_PAGES = 8
-        progress = st.session_state.page / TOTAL_PAGES
-        st.progress(progress)
-        st.caption(f"Section {st.session_state.page - 1} of {TOTAL_PAGES - 1}")
-        
         st.write("Use the Next/Back buttons at the bottom of each page to navigate through the questionnaire.")
         # Next parts (Section rendering) are in Part 3 — they will pick up st.session_state.locked_lang
-
-def mcq_buttons(q, question, options):
-    if q not in st.session_state.responses:
-        st.session_state.responses[q] = None
-
-    # This opens the single container for both question and options
-    st.markdown(f'<div class="q-container"><span class="q-title">{question}</span>', unsafe_allow_html=True)
-
-    # Use Streamlit columns for the buttons
-    cols = st.columns(len(options))
-    for i, opt in enumerate(options):
-        selected = st.session_state.responses[q] == opt
-        
-        # Style logic: uses 'primary' type for the selected button
-        btn_type = "primary" if selected else "secondary"
-        label = f"✅ {opt}" if selected else opt
-
-        if cols[i].button(label, key=f"{q}_{i}", type=btn_type):
-            st.session_state.responses[q] = opt
-            st.rerun()
-
-    # This closes the q-container div
-    st.markdown("</div>", unsafe_allow_html=True)
 
 # ---------------------------------------------------------
 # PART 3 — SECTION A to SECTION F (Multilingual Pages)
@@ -388,69 +228,6 @@ def unanswered(required_keys):
 def answer(qkey, value):
     st.session_state.responses[qkey] = value
 
-st.markdown("""
-<style>
-.likert-row {
-    margin-bottom: 12px;
-}
-.likert-cell button {
-    width: 100%;
-    height: 42px;
-    border-radius: 6px;
-}
-.likert-selected {
-    background-color: #2E7D32 !important;
-    color: white !important;
-}
-</style>
-""", unsafe_allow_html=True)
-
-
-def likert_row(qkey, question, scale=[1,2,3,4,5]):
-    """
-    Single-row Likert scale (1–5) with no default selection.
-    Stores numeric value as STRING to match your scoring logic.
-    """
-
-    if qkey not in st.session_state.responses:
-        st.session_state.responses[qkey] = None
-
-    st.markdown(f"<div class='likert-row'><b>{question}</b></div>", unsafe_allow_html=True)
-
-    cols = st.columns(len(scale) + 1)
-    cols[0].write("")  # spacer for question column
-
-    for i, val in enumerate(scale):
-        selected = st.session_state.responses[qkey] == str(val)
-        btn_label = f"✅ {val}" if selected else str(val)
-
-        if cols[i+1].button(
-            btn_label,
-            key=f"{qkey}_{val}"
-        ):
-            st.session_state.responses[qkey] = str(val)
-            st.rerun()
-            
-def likert_grid(qkeys, card_color="#38bdf8"):
-    lang = st.session_state.locked_lang
-
-    st.markdown(
-        f"<div class='likert-card' style='border-left-color:{card_color};'>",
-        unsafe_allow_html=True
-    )
-
-    # Header row
-    hdr = st.columns(6)
-    hdr[0].write("")
-    for i in range(1, 6):
-        hdr[i].markdown(f"**{i}**")
-
-    for q in qkeys:
-        qtext = t(lang, f"Q.{q}.q", f"[MISSING QUESTION {q}]")
-        likert_row(q, qtext)
-
-    st.markdown("</div>", unsafe_allow_html=True)
-
 # ---------------------------------------------------------
 # SECTION A — Demographics (Page 2)
 # ---------------------------------------------------------
@@ -463,8 +240,8 @@ if st.session_state.page == 2:
     for q in required:
         qtext = t(lang, f"Q.{q}.q", f"[MISSING QUESTION {q}]")
         opts = t(lang, f"Q.{q}.opts", [])
-        mcq_buttons(q, qtext, opts)
-
+        choice = st.radio(qtext, opts, index=0 if opts else None, key=f"r_{q}")
+        answer(q, choice)
 
     # Navigation buttons
     col1, col2, col3 = st.columns([1,1,4])
@@ -476,12 +253,9 @@ if st.session_state.page == 2:
 
     with col2:
         disabled = unanswered(required)
-        st.markdown('<div class="next-btn">', unsafe_allow_html=True)
         if st.button(tq("next"), disabled=disabled):
-            st.session_state.page += 1
+            st.session_state.page = 3
             st.rerun()
-        st.markdown('</div>', unsafe_allow_html=True)
-
 
 # ---------------------------------------------------------
 # SECTION B — Sleep Behaviour (Page 3)
@@ -495,7 +269,8 @@ if st.session_state.page == 3:
     for q in required:
         qtext = t(lang, f"Q.{q}.q", f"[MISSING QUESTION {q}]")
         opts = t(lang, f"Q.{q}.opts", [])
-        mcq_buttons(q, qtext, opts)
+        choice = st.radio(qtext, opts, index=0 if opts else None, key=f"r_{q}")
+        answer(q, choice)
 
     col1, col2, col3 = st.columns([1,1,4])
     with col1:
@@ -505,12 +280,9 @@ if st.session_state.page == 3:
 
     with col2:
         disabled = unanswered(required)
-        st.markdown('<div class="next-btn">', unsafe_allow_html=True)
         if st.button(tq("next"), disabled=disabled):
-            st.session_state.page += 1
+            st.session_state.page = 4
             st.rerun()
-        st.markdown('</div>', unsafe_allow_html=True)
-
 
 # ---------------------------------------------------------
 # SECTION C — Mental Health (Page 4)
@@ -523,13 +295,18 @@ if st.session_state.page == 4:
                 "C6","C7","C8","C9","C10","C11","C12"]
 
     st.subheader(tq("sections.C.sub_who5"))
-    likert_grid(required, card_color="#22c55e")
+    for q in ["C1","C2","C3","C4","C5"]:
+        qtext = t(lang, f"Q.{q}.q", f"[MISSING QUESTION {q}]")
+        opts = t(lang, f"Q.{q}.opts", [])
+        choice = st.radio(qtext, opts, index=0 if opts else None, key=f"r_{q}")
+        answer(q, choice)
 
-    # st.subheader(tq("sections.C.sub_dass"))
-    # for q in ["C6","C7","C8","C9","C10","C11","C12"]:
-    #     qtext = t(lang, f"Q.{q}.q", f"[MISSING QUESTION {q}]")
-    #     opts = t(lang, f"Q.{q}.opts", [])
-    #     mcq_buttons(q, qtext, opts)
+    st.subheader(tq("sections.C.sub_dass"))
+    for q in ["C6","C7","C8","C9","C10","C11","C12"]:
+        qtext = t(lang, f"Q.{q}.q", f"[MISSING QUESTION {q}]")
+        opts = t(lang, f"Q.{q}.opts", [])
+        choice = st.radio(qtext, opts, index=0 if opts else None, key=f"r_{q}")
+        answer(q, choice)
 
     col1, col2, col3 = st.columns([1,1,4])
     with col1:
@@ -539,11 +316,9 @@ if st.session_state.page == 4:
 
     with col2:
         disabled = unanswered(required)
-        st.markdown('<div class="next-btn">', unsafe_allow_html=True)
         if st.button(tq("next"), disabled=disabled):
-            st.session_state.page += 1
+            st.session_state.page = 5
             st.rerun()
-        st.markdown('</div>', unsafe_allow_html=True)
 
 # ---------------------------------------------------------
 # SECTION D — Cognitive Performance (Page 5)
@@ -553,8 +328,12 @@ if st.session_state.page == 5:
     lang = st.session_state.locked_lang
 
     required = ["D1","D2","D3","D4","D5","D6","D7","D8","D9"]
-    likert_grid(required, card_color="#38bdf8")
-    
+
+    for q in required:
+        qtext = t(lang, f"Q.{q}.q", f"[MISSING QUESTION {q}]")
+        opts = t(lang, f"Q.{q}.opts", [])
+        choice = st.radio(qtext, opts, index=0 if opts else None, key=f"r_{q}")
+        answer(q, choice)
 
     col1, col2, col3 = st.columns([1,1,4])
     with col1:
@@ -564,11 +343,9 @@ if st.session_state.page == 5:
 
     with col2:
         disabled = unanswered(required)
-        st.markdown('<div class="next-btn">', unsafe_allow_html=True)
         if st.button(tq("next"), disabled=disabled):
-            st.session_state.page += 1
+            st.session_state.page = 6
             st.rerun()
-        st.markdown('</div>', unsafe_allow_html=True)
 
 # ---------------------------------------------------------
 # SECTION E — Productivity Pattern (Page 6)
@@ -582,9 +359,8 @@ if st.session_state.page == 6:
     for q in required:
         qtext = t(lang, f"Q.{q}.q", f"[MISSING QUESTION {q}]")
         opts = t(lang, f"Q.{q}.opts", [])
-        st.markdown("<div class='card'>", unsafe_allow_html=True)
-        mcq_buttons(q, qtext, opts)
-        st.markdown("</div>", unsafe_allow_html=True)
+        choice = st.radio(qtext, opts, index=0 if opts else None, key=f"r_{q}")
+        answer(q, choice)
 
     col1, col2, col3 = st.columns([1,1,4])
     with col1:
@@ -594,11 +370,9 @@ if st.session_state.page == 6:
 
     with col2:
         disabled = unanswered(required)
-        st.markdown('<div class="next-btn">', unsafe_allow_html=True)
         if st.button(tq("next"), disabled=disabled):
-            st.session_state.page += 1
+            st.session_state.page = 7
             st.rerun()
-        st.markdown('</div>', unsafe_allow_html=True)
 
 # ---------------------------------------------------------
 # SECTION F — Lifestyle & Sleep Hygiene (Page 7)
@@ -612,9 +386,8 @@ if st.session_state.page == 7:
     for q in required:
         qtext = t(lang, f"Q.{q}.q", f"[MISSING QUESTION {q}]")
         opts = t(lang, f"Q.{q}.opts", [])
-        st.markdown("<div class='card'>", unsafe_allow_html=True)
-        mcq_buttons(q, qtext, opts)
-        st.markdown("</div>", unsafe_allow_html=True)
+        choice = st.radio(qtext, opts, index=0 if opts else None, key=f"r_{q}")
+        answer(q, choice)
 
     col1, col2, col3 = st.columns([1,1,4])
     with col1:
@@ -624,12 +397,9 @@ if st.session_state.page == 7:
 
     with col2:
         disabled = unanswered(required)
-        st.markdown('<div class="next-btn">', unsafe_allow_html=True)
         if st.button(tq("next"), disabled=disabled):
-            st.session_state.page += 1
+            st.session_state.page = 8
             st.rerun()
-        st.markdown('</div>', unsafe_allow_html=True)
-
 
 # ---------------------------------------------------------
 # PART 4 — SCORE CALCULATION & FINAL PAGE (Page 8)
@@ -759,19 +529,19 @@ def append_to_google_sheet(data_dict):
             "https://www.googleapis.com/auth/drive"
         ]
 
-        creds = Credentials.from_service_account_info(
-            st.secrets["gcp_service_account"],
+        creds = Credentials.from_service_account_file(
+            GSHEET_FILE,
             scopes=scopes
         )
-
         client = gspread.authorize(creds)
-        sheet = client.open('Database').worksheet('Sheet1')
+
+        sheet = client.open(SHEET_NAME).worksheet(WORKSHEET_NAME)
 
         # Add headers if sheet is empty
         if not sheet.get_all_values():
             sheet.append_row(list(data_dict.keys()))
 
-        # Append row
+        # Append data
         sheet.append_row(list(data_dict.values()))
         return True
 
