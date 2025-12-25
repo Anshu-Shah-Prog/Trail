@@ -83,7 +83,7 @@ def append_to_google_sheet(data_dict, sheet_name="Database"):
         )
 
         client = gspread.authorize(creds)
-        sheet = client.open(sheet_name).sheet1
+        sheet = client.open(sheet_name).Sheet1
 
         # Get existing values
         existing_values = sheet.get_all_values()
