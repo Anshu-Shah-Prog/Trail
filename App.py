@@ -43,7 +43,13 @@ def render_section(section_id, q_list, next_p):
         opts = data.get("opts", [])
         
         # FIXED: Save the selection directly to session_state.responses
-        choice = st.radio(q_text, opts, key=f"ans_{q}")
+        choice = st.radio(
+            q_text,
+            opts,
+            index=None,
+            key=f"ans_{q}"
+        )
+
         st.session_state.responses[q] = choice
 
         # Special logic for B14 text box
