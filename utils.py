@@ -60,12 +60,21 @@ def t_question(lang_code, q_id):
     return {"q": f"Question {q_id} missing", "opts": ["Error: Options not found"]}
     
 def append_to_google_sheet(data_dict, sheet_name="Database"):
+    """
+    Appends data to Google Sheets using Streamlit secrets service account.
+    Automatically creates 'Responses' worksheet if missing and adds headers if sheet is empty.
+    """
     try:
+        import gspread
+        from google.oauth2.service_account import Credentials
+        import streamlit as st
+
+        # Load credentials from Streamlit secrets
+        creds_info = st.secrets["gcp_service_account"]
         scopes = [
             "https://www.googleapis.com/auth/spreadsheets",
             "https://www.googleapis.com/auth/drive"
         ]
-        creds_info = st.secrets["gcp_service_account"]
         creds = Credentials.from_service_account_info(creds_info, scopes=scopes)
         client = gspread.authorize(creds)
 
@@ -76,13 +85,14 @@ def append_to_google_sheet(data_dict, sheet_name="Database"):
             sh = client.open(sheet_name)
             sheet = sh.add_worksheet(title="Responses", rows=1000, cols=20)
 
-        # Add headers if sheet is empty
-        if not sheet.get_all_values():
+        # Get existing rows to check if headers exist
+        existing = sheet.get_all_values()
+        if not existing:
+            # Append headers first
             sheet.append_row(list(data_dict.keys()))
 
         # Append data
         sheet.append_row(list(data_dict.values()))
-        st.success("Data appended to Google Sheets!")
         return True
 
     except Exception as e:
