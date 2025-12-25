@@ -133,38 +133,41 @@ elif st.session_state.page == 3:
     lang = st.session_state.locked_lang
     st.header(t(lang, "sections.B"))
 
-    # Clear previous B12–B14 responses to avoid stale state
-    for q in ["B12", "B13", "B14", "B14_details"]:
-        if q in st.session_state.responses:
-            del st.session_state.responses[q]
+    # Questions list
+    questions = [f"B{i}" for i in range(1, 15)]
 
-    # --- Render B1–B11 ---
-    for q in [f"B{i}" for i in range(1, 12)]:
+    for q in questions:
         data = t_question(lang, q)
-        choice = st.radio(data["q"], data["opts"], key=f"ans_{q}")
+        q_text = data.get("q", f"Question {q}")
+        opts = data.get("opts", [])
+
+        # Skip if options are empty (safety)
+        if not opts:
+            st.warning(f"Options missing for {q}")
+            continue
+
+        # Use a unique key for each radio to force Streamlit to render
+        key_name = f"ans_{q}"
+
+        # Render the radio button
+        choice = st.radio(q_text, opts, index=0 if q != "B14" else None, key=key_name)
+
         st.session_state.responses[q] = choice
 
-    st.divider()
-
-    # --- Render B12–B14 ---
-    for q in ["B12", "B13", "B14"]:
-        data = t_question(lang, q)
-        choice = st.radio(data["q"], data["opts"], key=f"ans_{q}_extra")
-        st.session_state.responses[q] = choice
-
-        # Special logic for B14 text box
+        # Conditional input for B14
         if q == "B14" and choice in ["Yes", "हाँ", "होय"]:
             st.session_state.responses["B14_details"] = st.text_input(
                 "Please specify / कृपया स्पष्ट करें / कृपया स्पष्ट करा:",
                 key="input_B14_details"
             )
 
-    # --- Navigation ---
+    # Navigation buttons
     col1, col2 = st.columns(2)
     with col1:
         if st.button(t(lang, "back", "Back")): prev_page(); st.rerun()
     with col2:
         if st.button(t(lang, "next", "Next")): st.session_state.page = 4; st.rerun()
+
 elif st.session_state.page == 4:
     render_section_c()
 elif st.session_state.page == 5:
