@@ -9,7 +9,26 @@
 # cognitive_efficiency : 8 – 40   (higher = better)
 # lifestyle_risk       : 5 – 29   (higher = worse)
 # ======================================================
-
+INTERPRETATION_LABELS = {
+    "en": {
+        "section_title": "Score Interpretation",
+        "level": "Level",
+        "reflects": "What this reflects",
+        "change": "What you can improve"
+    },
+    "hi": {
+        "section_title": "स्कोर की व्याख्या",
+        "level": "स्तर",
+        "reflects": "यह क्या दर्शाता है",
+        "change": "आप क्या सुधार सकते हैं"
+    },
+    "mr": {
+        "section_title": "गुणांकनाचे स्पष्टीकरण",
+        "level": "पातळी",
+        "reflects": "हे काय दर्शवते",
+        "change": "आपण काय सुधारू शकता"
+    }
+}
 
 SCORE_INTERPRETATIONS = {
 
