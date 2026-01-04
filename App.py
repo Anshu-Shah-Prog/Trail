@@ -294,7 +294,7 @@ def render_section_c():
             st.rerun()
 
     with col2:
-        if st.button(t(lang, "next", "Next"), disabled=bool(unanswered)):\
+        if st.button(t(lang, "next", "Next"), disabled=bool(unanswered)):
             scroll_to_intro_header()
             st.session_state.page = 5  # next page number
             st.rerun()
