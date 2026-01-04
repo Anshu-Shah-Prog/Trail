@@ -88,17 +88,18 @@ def next_page():
 def prev_page():
     st.session_state.page -= 1
 
-def scroll_to_intro_header():
+def scroll_to_question(q_key):
     """
-    Scroll smoothly to the 'Morning Minds & Night Owls — Chronotype & Brain Efficiency Study' header
+    Scrolls to a question block with a specific Streamlit key class.
+    e.g., q_key = "B1" will scroll to the element with class 'st-key-ans_B1'
     """
     st.markdown(
-        """
+        f"""
         <script>
-        const el = document.getElementById("morning-minds-and-night-owls-chronotype-and-brain-efficiency-study");
-        if(el){
-            el.scrollIntoView({behavior: 'smooth', block: 'start'});
-        }
+        const el = document.querySelector(".st-key-ans_{q_key}");
+        if(el){{
+            el.scrollIntoView({{behavior: 'smooth', block: 'start'}});
+        }}
         </script>
         """,
         unsafe_allow_html=True
@@ -192,7 +193,6 @@ def show_intro():
     if st.button(t(lang, "start", "Start")):
         st.session_state.locked_lang = st.session_state.lang_choice
         st.session_state.responses = {}
-        scroll_to_intro_header()
         next_page()
         st.rerun()
 
@@ -238,13 +238,11 @@ def render_section(section_id, q_list, next_p):
 
     with col1:
         if st.button(t(lang, "back", "Back")):
-            scroll_to_intro_header()
             st.session_state.page -= 1
             st.rerun()
 
     with col2:
         if st.button(t(lang, "next", "Next"), disabled=bool(unanswered)):
-            scroll_to_intro_header()
             st.session_state.page = next_p
             st.rerun()
 
@@ -289,13 +287,11 @@ def render_section_c():
 
     with col1:
         if st.button(t(lang, "back", "Back")):
-            scroll_to_intro_header()
             st.session_state.page -= 1
             st.rerun()
 
     with col2:
         if st.button(t(lang, "next", "Next"), disabled=bool(unanswered)):
-            scroll_to_intro_header()
             st.session_state.page = 5  # next page number
             st.rerun()
 
@@ -399,21 +395,26 @@ if st.session_state.page == 1:
 
 elif st.session_state.page == 2:
     render_section("A", ["A1", "A2", "A3", "A4", "A5", "A6", "A7"], 3)
-
+    scroll_to_question("A1")
+    
 elif st.session_state.page == 3:
     render_section("B", [f"B{i}" for i in range(1, 14)], 4)
+    scroll_to_question("B1")
 
 elif st.session_state.page == 4:
     render_section_c()
 
 elif st.session_state.page == 5:
     render_section("D", [f"D{i}" for i in range(1, 10)], 6)
+    scroll_to_question("D1")
 
 elif st.session_state.page == 6:
     render_section("E", ["E1", "E2", "E3", "E4"], 7)
+    scroll_to_question("E1")
 
 elif st.session_state.page == 7:
     render_section("F", ["F1", "F2", "F3", "F4", "F5", "F6"], 8)
+    scroll_to_question("F1")
 
 elif st.session_state.page == 8:
     show_final()
