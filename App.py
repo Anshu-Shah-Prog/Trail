@@ -91,9 +91,9 @@ def scroll_to_top():
     st.markdown(
         """
         <script>
-        const mainContent = window.parent.document.querySelector('main');
-        if (mainContent) {
-            mainContent.scrollTo({ top: 0, behavior: 'smooth' });
+        const main = window.parent.document.querySelector('section[data-testid="stMain"]');
+        if (main) {
+            main.scrollTo({ top: 0, behavior: 'instant' });
         }
         </script>
         """,
