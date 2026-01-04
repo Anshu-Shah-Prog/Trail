@@ -89,15 +89,13 @@ def prev_page():
     st.session_state.page -= 1
 
 def scroll_to_top():
+    """
+    Scrolls the Streamlit page to top using JS.
+    """
     st.markdown(
         """
         <script>
-        const scrollContainer = document.querySelector(
-          'div[data-test-scroll-behavior="normal"]'
-        );
-        if (scrollContainer) {
-            scrollContainer.scrollTo({ top: 0, behavior: 'instant' });
-        }
+        window.scrollTo({ top: 0, behavior: 'smooth' });
         </script>
         """,
         unsafe_allow_html=True
@@ -208,51 +206,47 @@ def render_section(section_id, q_list, next_p):
     
     st.subheader(t(lang, f"sections.{section_id}", f"Section {section_id}"))
 
+    # Render all questions
     for q in q_list:
         data = t_question(lang, q)
         q_text = data.get("q", f"Question {q}")
         opts = data.get("opts", [])
 
-        # Get the previously saved response for this specific question
         existing_ans = st.session_state.responses.get(q)
 
         choice = render_mcq_card(
-            q_text, 
-            opts, 
-            key=f"ans_{q}", 
-            current_value=existing_ans # Pass it here
+            q_text,
+            opts,
+            key=f"ans_{q}",
+            current_value=existing_ans
         )
         st.session_state.responses[q] = choice
 
+        # Example special case for B14
         if q == "B14" and choice in ["Yes", "हाँ", "होय"]:
             st.session_state.responses["B14_details"] = st.text_input(
                 "Please specify / कृपया स्पष्ट करें / कृपया स्पष्ट करा:",
                 key="input_B14_details"
             )
 
-    unanswered = [
-        q for q in q_list
-        if st.session_state.responses.get(q) is None
-    ]
+    unanswered = [q for q in q_list if st.session_state.responses.get(q) is None]
 
     col1, col2 = st.columns(2)
 
     with col1:
         if st.button(t(lang, "back", "Back")):
-            prev_page()
-            scroll_to_top()
+            st.session_state.page -= 1
+            scroll_to_top()  # <-- scroll
             st.rerun()
 
     with col2:
-        if st.button(
-            t(lang, "next", "Next"),
-            disabled=bool(unanswered)
-        ):
+        if st.button(t(lang, "next", "Next"), disabled=bool(unanswered)):
             st.session_state.page = next_p
-            scroll_to_top()
+            scroll_to_top()  # <-- scroll
             st.rerun()
+
     if unanswered:
-        st.info("Please answer all questions to continue.")
+        st.info(t(lang, "answer_all", "Please answer all questions to continue."))
 
 # --------------------------------------------------
 # Section C (Custom layout)
@@ -267,62 +261,43 @@ def render_section_c():
 
     qs = ["C1","C2","C3","C4","C5","C6","C7","C8","C9","C10","C11","C12"]
 
+    # WHO-5 questions
     st.subheader(t(lang, "sections.C_sub_who"))
     for q in qs[:5]:
         data = t_question(lang, q)
         q_text = data.get("q", f"Question {q}")
         opts = data.get("opts", [])
-        
-        # Get saved answer
         existing_ans = st.session_state.responses.get(q)
-        
-        st.session_state.responses[q] = render_mcq_card(
-            q_text, 
-            opts, 
-            key=f"ans_{q}", 
-            current_value=existing_ans
-        )
+        st.session_state.responses[q] = render_mcq_card(q_text, opts, key=f"ans_{q}", current_value=existing_ans)
 
     st.divider()
 
+    # Distress questions
     for q in qs[5:]:
         data = t_question(lang, q)
         q_text = data.get("q", f"Question {q}")
         opts = data.get("opts", [])
-        
-        # Get saved answer
         existing_ans = st.session_state.responses.get(q)
-        
-        st.session_state.responses[q] = render_mcq_card(
-            q_text, 
-            opts, 
-            key=f"ans_{q}", 
-            current_value=existing_ans
-        )
+        st.session_state.responses[q] = render_mcq_card(q_text, opts, key=f"ans_{q}", current_value=existing_ans)
 
-    unanswered = [
-        q for q in qs
-        if st.session_state.responses.get(q) is None
-    ]
+    unanswered = [q for q in qs if st.session_state.responses.get(q) is None]
 
     col1, col2 = st.columns(2)
 
     with col1:
         if st.button(t(lang, "back", "Back")):
-            prev_page()
+            st.session_state.page -= 1
             scroll_to_top()
             st.rerun()
 
     with col2:
-        if st.button(
-            t(lang, "next", "Next"),
-            disabled=bool(unanswered)
-        ):
-            st.session_state.page = 5
+        if st.button(t(lang, "next", "Next"), disabled=bool(unanswered)):
+            st.session_state.page = 5  # next page number
             scroll_to_top()
-            st.rerun()        
+            st.rerun()
+
     if unanswered:
-        st.info("Please answer all questions to continue.")
+        st.info(t(lang, "answer_all", "Please answer all questions to continue."))
 
 SCALE_ORDER = [
     ("sleep_quality", "🌙"),
