@@ -192,8 +192,8 @@ def show_intro():
     if st.button(t(lang, "start", "Start")):
         st.session_state.locked_lang = st.session_state.lang_choice
         st.session_state.responses = {}
-        next_page()
         scroll_to_intro_header()
+        next_page()
         st.rerun()
 
 
@@ -238,14 +238,14 @@ def render_section(section_id, q_list, next_p):
 
     with col1:
         if st.button(t(lang, "back", "Back")):
-            st.session_state.page -= 1
             scroll_to_intro_header()
+            st.session_state.page -= 1
             st.rerun()
 
     with col2:
         if st.button(t(lang, "next", "Next"), disabled=bool(unanswered)):
-            st.session_state.page = next_p
             scroll_to_intro_header()
+            st.session_state.page = next_p
             st.rerun()
 
     if unanswered:
@@ -289,14 +289,14 @@ def render_section_c():
 
     with col1:
         if st.button(t(lang, "back", "Back")):
-            st.session_state.page -= 1
             scroll_to_intro_header()
+            st.session_state.page -= 1
             st.rerun()
 
     with col2:
-        if st.button(t(lang, "next", "Next"), disabled=bool(unanswered)):
-            st.session_state.page = 5  # next page number
+        if st.button(t(lang, "next", "Next"), disabled=bool(unanswered)):\
             scroll_to_intro_header()
+            st.session_state.page = 5  # next page number
             st.rerun()
 
     if unanswered:
