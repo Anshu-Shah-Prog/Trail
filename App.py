@@ -5,6 +5,7 @@ import pandas as pd
 from utils import t, t_question, append_to_google_sheet, TRANSLATIONS, map_to_english
 from UI import render_mcq_card
 from test_compute_scores import compute_scores
+from score_interpretations import interpret_score
 import uuid
 
 st.markdown(
@@ -323,6 +324,13 @@ def render_section_c():
     if unanswered:
         st.info("Please answer all questions to continue.")
 
+SCALE_ORDER = [
+    ("sleep_quality", "🌙"),
+    ("WHO_total", "🙂"),
+    ("distress_total", "⚠️"),
+    ("cognitive_efficiency", "🧠"),
+    ("lifestyle_risk", "🔥")
+]
 
 # --------------------------------------------------
 # Final Page
@@ -334,6 +342,34 @@ def show_final():
 
     st.success(t(lang, "final_thanks", "Thank you for completing the assessment!"))
     st.subheader(t(lang, "final_scores", "Your Scores"))
+    st.subheader(t(lang, "final_interpretation", "Score Interpretation"))
+    for scale_key, icon in SCALE_ORDER:
+        score_value = scores.get(scale_key)
+    
+        interp = interpret_score(scale_key, score_value, lang)
+    
+        if not interp:
+            continue
+    
+        with st.container(border=True):
+            st.markdown(
+                f"""
+                ### {icon} {interp['title']}
+                **{t(lang, 'level', 'Level')}:** {interp['level']}
+    
+                {interp['meaning']}
+                """
+            )
+    
+            if interp.get("what_it_reflects"):
+                st.markdown("**" + t(lang, "reflects", "What this reflects") + ":**")
+                for item in interp["what_it_reflects"]:
+                    st.markdown(f"- {item}")
+    
+            if interp.get("what_to_change"):
+                st.markdown("**" + t(lang, "change", "What you can improve") + ":**")
+                for item in interp["what_to_change"]:
+                    st.markdown(f"- {item}")
 
     # Display metrics using translations
     metrics = TRANSLATIONS.get("final_metrics", {}).get(lang, {})
@@ -401,3 +437,11 @@ elif st.session_state.page == 7:
 
 elif st.session_state.page == 8:
     show_final()
+    st.info(
+    t(
+        lang,
+        "disclaimer",
+        "This assessment is for informational purposes only and is not a medical diagnosis."
+    )
+)
+
