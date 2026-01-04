@@ -327,7 +327,7 @@ elif st.session_state.page == 2:
     render_section("A", ["A1", "A2", "A3", "A4", "A5", "A6", "A7"], 3)
 
 elif st.session_state.page == 3:
-    render_section("B", [f"B{i}" for i in range(1, 15)], 4)
+    render_section("B", [f"B{i}" for i in range(1, 14)], 4)
 
 elif st.session_state.page == 4:
     render_section_c()
