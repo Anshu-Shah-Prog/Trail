@@ -7,6 +7,18 @@ from UI import render_mcq_card
 from test_compute_scores import compute_scores
 import uuid
 
+# Put at the top of app.py
+if st.session_state.get("_scroll_to_top"):
+    st.markdown(
+        """
+        <script>
+        window.scrollTo({top: 0, behavior: 'instant'});
+        </script>
+        """,
+        unsafe_allow_html=True
+    )
+    st.session_state._scroll_to_top = False
+
 st.markdown(
     """
     <style>
@@ -248,9 +260,10 @@ def render_section(section_id, q_list, next_p):
             disabled=bool(unanswered)
         ):
             st.session_state.page = next_p
+            st.session_state._scroll_to_top = True
             st.rerun()
-            scroll_to_top()
     if unanswered:
+        st.session_state._scroll_to_q = f"ans_{unanswered[0]}"
         st.info("Please answer all questions to continue.")
 
 # --------------------------------------------------
@@ -318,9 +331,11 @@ def render_section_c():
             disabled=bool(unanswered)
         ):
             st.session_state.page = 5
+            st.session_state._scroll_to_top = True
             st.rerun()
             scroll_to_top()
     if unanswered:
+        st.session_state._scroll_to_q = f"ans_{unanswered[0]}"
         st.info("Please answer all questions to continue.")
 
 
