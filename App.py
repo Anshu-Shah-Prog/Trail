@@ -248,8 +248,8 @@ def render_section(section_id, q_list, next_p):
             disabled=bool(unanswered)
         ):
             st.session_state.page = next_p
-            scroll_to_top()
             st.rerun()
+            scroll_to_top()
     if unanswered:
         st.info("Please answer all questions to continue.")
 
@@ -318,8 +318,8 @@ def render_section_c():
             disabled=bool(unanswered)
         ):
             st.session_state.page = 5
-            scroll_to_top()
             st.rerun()
+            scroll_to_top()
     if unanswered:
         st.info("Please answer all questions to continue.")
 
