@@ -35,7 +35,7 @@ st.markdown(
        standardizing the gap between the card and the options */
     [data-testid="stVerticalBlock"] > div:has(div.stRadio) {
         margin-top: 5px;
-        padding-left: 20px;
+        padding-left: 5px;
         padding-bottom: 5px;
     }
 
