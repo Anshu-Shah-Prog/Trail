@@ -7,37 +7,6 @@ from UI import render_mcq_card
 from test_compute_scores import compute_scores
 import uuid
 
-# ---------------------------
-# Auto-scroll to first unanswered question
-# ---------------------------
-def inject_scroll_to_question():
-    qkey = st.session_state.get("_scroll_to_q")
-    if qkey:
-        st.markdown(
-            f"""
-            <script>
-            requestAnimationFrame(() => {{
-                const el = document.querySelector(
-                  '[data-testid="stElementContainer"].st-key-{qkey}'
-                );
-                if (el) {{
-                    el.scrollIntoView({{
-                        behavior: 'smooth',
-                        block: 'center'
-                    }});
-                }}
-            }});
-            </script>
-            """,
-            unsafe_allow_html=True
-        )
-        st.session_state._scroll_to_q = None
-
-# ---------------------------
-# Call auto-scroll
-# ---------------------------
-inject_scroll_to_question()
-
 st.markdown(
     """
     <style>
@@ -274,17 +243,12 @@ def render_section(section_id, q_list, next_p):
             st.rerun()
 
     with col2:
-        if st.button(t(lang, "next", "Next")):
-            if unanswered:
-                # Scroll to first unanswered question
-                st.info("Please answer all questions to continue.")
-                first_q = unanswered[0]
-                st.session_state._scroll_to_q = f"ans_{first_q}"
-                st.rerun()
-            else:
-                st.session_state.page = next_p
-                scroll_to_top()
-                st.rerun()
+        if st.button(t(lang, "next", "Next"), disabled=bool(unanswered)):
+            st.info("Please answer all questions to continue.")
+            st.session_state.page = next_p
+            scroll_to_top()
+            st.rerun()
+
 
 # --------------------------------------------------
 # Section C (Custom layout)
@@ -346,16 +310,12 @@ def render_section_c():
             st.rerun()
 
     with col2:
-        if st.button(t(lang, "next", "Next")):
-            if unanswered:
-                st.info("Please answer all questions to continue.")
-                first_q = unanswered[0]
-                st.session_state._scroll_to_q = f"ans_{first_q}"
-                st.rerun()
-            else:
-                st.session_state.page = 5
-                scroll_to_top()
-                st.rerun()
+        if st.button(t(lang, "next", "Next"), disabled=bool(unanswered)):
+            st.info("Please answer all questions to continue.")
+            st.session_state.page = 5
+            scroll_to_top()
+            st.rerun()
+
 
 # --------------------------------------------------
 # Final Page
