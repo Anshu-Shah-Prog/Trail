@@ -113,22 +113,59 @@ def show_progress():
 def show_intro():
     lang = st.session_state.lang_choice
 
+    # --- HERO IMAGE CSS ---
     st.markdown(
         """
         <style>
-        /* Target only images rendered by Streamlit */
-        img {
-            border-radius: 16px;
-            margin-bottom: 20px;
+        /* Hero container */
+        .hero-container {
+            width: 100%;
+            max-height: 260px;
+            overflow: hidden;
+            border-radius: 18px;
+            box-shadow: 0 12px 28px rgba(0, 0, 0, 0.25);
+            animation: fadeInHero 1.2s ease-in-out;
+            margin-bottom: 24px;
+        }
+
+        /* Hero image */
+        .hero-container img {
+            width: 100%;
+            height: 260px;
+            object-fit: cover;
+        }
+
+        /* Mobile optimization */
+        @media (max-width: 768px) {
+            .hero-container img {
+                height: 200px;
+            }
+        }
+
+        /* Fade-in animation */
+        @keyframes fadeInHero {
+            from {
+                opacity: 0;
+                transform: translateY(12px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
         </style>
         """,
         unsafe_allow_html=True
     )
 
-    st.image(
-        "https://i.pinimg.com/736x/7e/53/c5/7e53c5dc0dd435fd92fb5a124e796991.jpg",
-        use_container_width=True
+    # --- HERO IMAGE ---
+    st.markdown(
+        """
+        <div class="hero-container">
+            <img src="https://i.pinimg.com/736x/7e/53/c5/7e53c5dc0dd435fd92fb5a124e796991.jpg" />
+        </div>
+        """,
+        unsafe_allow_html=True
     )
 
     st.title(t(lang, "title", "Survey"))
