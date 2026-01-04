@@ -113,6 +113,24 @@ def show_progress():
 def show_intro():
     lang = st.session_state.lang_choice
 
+    st.markdown(
+        """
+        <style>
+        /* Target only images rendered by Streamlit */
+        img {
+            border-radius: 16px;
+            margin-bottom: 20px;
+        }
+        </style>
+        """,
+        unsafe_allow_html=True
+    )
+
+    st.image(
+        "https://i.pinimg.com/736x/7e/53/c5/7e53c5dc0dd435fd92fb5a124e796991.jpg",
+        use_container_width=True
+    )
+
     st.title(t(lang, "title", "Survey"))
     st.write(t(lang, "desc", ""))
 
