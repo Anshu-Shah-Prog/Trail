@@ -2,7 +2,7 @@
   "langs": ["en", "hi", "mr"],
   "en": {
     "title": "Morning Minds & Night Owls ? — Chronotype & Brain Efficiency Study",
-    "desc": "Circadian Preference, Sleep Patterns, and Their Association with Cognitive Efficiency, Mental Well-Being, and Productivity. This study explores how individual sleep–wake preferences (chronotypes) are associated with cognitive performance, mental well-being, and daily productivity.\n\nPlease answer all questions honestly based on your typical experiences over the past two weeks. There are no right or wrong answers.Your responses are completely anonymous and will be used only for academic research purposes.\n\nUse the Next button to move forward.",
+    "desc": "Circadian Preference, Sleep Patterns, and Their Association with Cognitive Efficiency, Mental Well-Being, and Productivity. This study explores how individual sleep–wake preferences (chronotypes) are associated with cognitive performance, mental well-being, and daily productivity.\n\nPlease answer all questions honestly based on your typical experiences over the past two weeks. There are no right or wrong answers. Your responses are completely anonymous and will be used only for academic research purposes.\n\nUse the Next button to move forward.",
     "lang_select": "Select language",
     "next": "Next →",
     "back": "← Back",
@@ -80,7 +80,7 @@
   },
   "hi": {
     "title":"जानिए — आपका दिमाग कब सबसे अच्छा काम करता है?",
-    "desc": "नींद का समय, सोचने-समझने की क्षमता, मानसिक स्वास्थ्य और रोज़मर्रा की उत्पादकता का अध्ययन| यह अध्ययन यह समझने के लिए किया जा रहा है कि लोगों की नींद-जागने की आदतें उनके सोचने-समझने की क्षमता, मानसिक स्थिति और दैनिक कामकाज से कैसे जुड़ी होती हैं।\n\nकृपया पिछले दो हफ्तों के अपने सामान्य अनुभवों के आधार पर सभी प्रश्नों के उत्तर ईमानदारी से दें। यहाँ कोई सही या गलत उत्तर नहीं है। आपके सभी उत्तर पूरी तरह गोपनीय रहेंगे और केवल शैक्षणिक शोध के लिए उपयोग किए जाएंगे।\n\nआगे बढ़ने के लिए Next बटन का उपयोग करें।",
+    "desc": "नींद का समय, सोचने-समझने की क्षमता, मानसिक स्वास्थ्य और रोज़मर्रा की उत्पादकता का अध्ययन। यह अध्ययन यह समझने के लिए किया जा रहा है कि लोगों की नींद-जागने की आदतें उनके सोचने-समझने की क्षमता, मानसिक स्थिति और दैनिक कामकाज से कैसे जुड़ी होती हैं।\n\nकृपया पिछले दो हफ्तों के अपने सामान्य अनुभवों के आधार पर सभी प्रश्नों के उत्तर ईमानदारी से दें। यहाँ कोई सही या गलत उत्तर नहीं है। आपके सभी उत्तर पूरी तरह गोपनीय रहेंगे और केवल शैक्षणिक शोध के लिए उपयोग किए जाएंगे।\n\nआगे बढ़ने के लिए Next बटन का उपयोग करें।",
     "lang_select": "भाषा चुनें",
     "next": "Next →",
     "back": "← Back",
