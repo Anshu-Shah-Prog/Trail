@@ -91,7 +91,12 @@ def scroll_to_top():
     st.markdown(
         """
         <script>
-        window.scrollTo({ top: 0, behavior: 'instant' });
+        const scrollContainer = document.querySelector(
+          'div[data-test-scroll-behavior="normal"]'
+        );
+        if (scrollContainer) {
+            scrollContainer.scrollTo({ top: 0, behavior: 'instant' });
+        }
         </script>
         """,
         unsafe_allow_html=True
