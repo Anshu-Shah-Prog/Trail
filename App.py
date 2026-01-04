@@ -342,6 +342,19 @@ def show_final():
 
     st.success(t(lang, "final_thanks", "Thank you for completing the assessment!"))
     st.subheader(t(lang, "final_scores", "Your Scores"))
+    # Display metrics using translations
+    metrics = TRANSLATIONS.get("final_metrics", {}).get(lang, {})
+    col1, col2 = st.columns(2)
+
+    with col1:
+        st.metric(metrics.get("sleep_quality", "🌙 Sleep Quality (3–15)"), scores.get("sleep_quality", 0))
+        st.metric(metrics.get("WHO_total", "🙂 WHO-5 Well-being (0–100)"), scores.get("WHO_total", 0))
+        st.metric(metrics.get("distress_total", "⚠️ Mental Distress (6–30)"), scores.get("distress_total", 0))
+
+    with col2:
+        st.metric(metrics.get("cognitive_efficiency", "🧠 Cognitive Efficiency (8–40)"), scores.get("cognitive_efficiency", 0))
+        st.metric(metrics.get("lifestyle_risk", "🔥 Lifestyle Risk (higher = worse)"), scores.get("lifestyle_risk", 0))
+
     st.subheader(t(lang, "final_interpretation", "Score Interpretation"))
     for scale_key, icon in SCALE_ORDER:
         score_value = scores.get(scale_key)
@@ -370,19 +383,6 @@ def show_final():
                 st.markdown("**" + t(lang, "change", "What you can improve") + ":**")
                 for item in interp["what_to_change"]:
                     st.markdown(f"- {item}")
-
-    # Display metrics using translations
-    metrics = TRANSLATIONS.get("final_metrics", {}).get(lang, {})
-    col1, col2 = st.columns(2)
-
-    with col1:
-        st.metric(metrics.get("sleep_quality", "🌙 Sleep Quality (3–15)"), scores.get("sleep_quality", 0))
-        st.metric(metrics.get("WHO_total", "🙂 WHO-5 Well-being (0–100)"), scores.get("WHO_total", 0))
-        st.metric(metrics.get("distress_total", "⚠️ Mental Distress (6–30)"), scores.get("distress_total", 0))
-
-    with col2:
-        st.metric(metrics.get("cognitive_efficiency", "🧠 Cognitive Efficiency (8–40)"), scores.get("cognitive_efficiency", 0))
-        st.metric(metrics.get("lifestyle_risk", "🔥 Lifestyle Risk (higher = worse)"), scores.get("lifestyle_risk", 0))
 
     st.balloons()
 
@@ -437,11 +437,3 @@ elif st.session_state.page == 7:
 
 elif st.session_state.page == 8:
     show_final()
-    st.info(
-    t(
-        lang,
-        "disclaimer",
-        "This assessment is for informational purposes only and is not a medical diagnosis."
-    )
-)
-
