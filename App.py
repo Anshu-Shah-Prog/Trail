@@ -88,14 +88,17 @@ def next_page():
 def prev_page():
     st.session_state.page -= 1
 
-def scroll_to_top():
+def scroll_to_intro_header():
     """
-    Scrolls the Streamlit page to top using JS.
+    Scroll smoothly to the 'Morning Minds & Night Owls — Chronotype & Brain Efficiency Study' header
     """
     st.markdown(
         """
         <script>
-        window.scrollTo({ top: 0, behavior: 'smooth' });
+        const el = document.getElementById("morning-minds-and-night-owls-chronotype-and-brain-efficiency-study");
+        if(el){
+            el.scrollIntoView({behavior: 'smooth', block: 'start'});
+        }
         </script>
         """,
         unsafe_allow_html=True
@@ -190,7 +193,7 @@ def show_intro():
         st.session_state.locked_lang = st.session_state.lang_choice
         st.session_state.responses = {}
         next_page()
-        scroll_to_top()
+        scroll_to_intro_header()
         st.rerun()
 
 
@@ -236,13 +239,13 @@ def render_section(section_id, q_list, next_p):
     with col1:
         if st.button(t(lang, "back", "Back")):
             st.session_state.page -= 1
-            scroll_to_top()  # <-- scroll
+            scroll_to_intro_header()
             st.rerun()
 
     with col2:
         if st.button(t(lang, "next", "Next"), disabled=bool(unanswered)):
             st.session_state.page = next_p
-            scroll_to_top()  # <-- scroll
+            scroll_to_intro_header()
             st.rerun()
 
     if unanswered:
@@ -287,13 +290,13 @@ def render_section_c():
     with col1:
         if st.button(t(lang, "back", "Back")):
             st.session_state.page -= 1
-            scroll_to_top()
+            scroll_to_intro_header()
             st.rerun()
 
     with col2:
         if st.button(t(lang, "next", "Next"), disabled=bool(unanswered)):
             st.session_state.page = 5  # next page number
-            scroll_to_top()
+            scroll_to_intro_header()
             st.rerun()
 
     if unanswered:
