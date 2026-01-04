@@ -708,3 +708,10 @@ def interpret_score(scale_name, score_value, lang="en"):
             return item
 
     return None
+
+def get_interpretation_labels(lang="en"):
+    """
+    Returns language-specific labels for interpretation sections.
+    Falls back to English if language is missing.
+    """
+    return INTERPRETATION_LABELS.get(lang) or INTERPRETATION_LABELS["en"]
