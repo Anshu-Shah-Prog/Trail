@@ -355,7 +355,7 @@ def show_final():
         st.metric(metrics.get("cognitive_efficiency", "🧠 Cognitive Efficiency (8–40)"), scores.get("cognitive_efficiency", 0))
         st.metric(metrics.get("lifestyle_risk", "🔥 Lifestyle Risk (higher = worse)"), scores.get("lifestyle_risk", 0))
 
-    st.subheader(t(lang, "final_interpretation", "Score Interpretation"))
+    st.subheader(t(lang, "final_interpretation"))
     for scale_key, icon in SCALE_ORDER:
         score_value = scores.get(scale_key)
     
