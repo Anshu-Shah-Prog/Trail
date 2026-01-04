@@ -5,7 +5,7 @@ import pandas as pd
 from utils import t, t_question, append_to_google_sheet, TRANSLATIONS, map_to_english
 from UI import render_mcq_card
 from test_compute_scores import compute_scores
-from score_interpretations import interpret_score
+from score_interpretations import interpret_score, get_interpretation_labels
 import uuid
 
 st.markdown(
@@ -355,7 +355,9 @@ def show_final():
         st.metric(metrics.get("cognitive_efficiency", "🧠 Cognitive Efficiency (8–40)"), scores.get("cognitive_efficiency", 0))
         st.metric(metrics.get("lifestyle_risk", "🔥 Lifestyle Risk (higher = worse)"), scores.get("lifestyle_risk", 0))
 
-    st.subheader(t(lang, "final_interpretation"))
+    labels = get_interpretation_labels(lang)
+    st.subheader(labels["section_title"])
+    
     for scale_key, icon in SCALE_ORDER:
         score_value = scores.get(scale_key)
     
@@ -368,19 +370,19 @@ def show_final():
             st.markdown(
                 f"""
                 ### {icon} {interp['title']}
-                **{t(lang, 'level', 'Level')}:** {interp['level']}
+                **{labels['level']}:** {interp['level']}
     
                 {interp['meaning']}
                 """
             )
     
             if interp.get("what_it_reflects"):
-                st.markdown("**" + t(lang, "reflects", "What this reflects") + ":**")
+                st.markdown(f"**{labels['reflects']}:**")
                 for item in interp["what_it_reflects"]:
                     st.markdown(f"- {item}")
     
             if interp.get("what_to_change"):
-                st.markdown("**" + t(lang, "change", "What you can improve") + ":**")
+                st.markdown(f"**{labels['change']}:**")
                 for item in interp["what_to_change"]:
                     st.markdown(f"- {item}")
 
